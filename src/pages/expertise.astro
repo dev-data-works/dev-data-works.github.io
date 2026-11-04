@@ -1,0 +1,173 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PartnerBand from '../components/PartnerBand.astro';
+import Icon from '../components/Icon.astro';
+import { capabilities } from '../data/content';
+---
+
+<Base
+  title="Expertise"
+  description="Custom software, data platforms, analytics and visualization, GIS, AI and automation, and digital transformation advisory for organizations creating social impact."
+>
+  <PageHeader
+    kicker="Expertise"
+    title="The capabilities to design, build, and sustain."
+    lede="We bring together software engineering, data, and advisory skills so partners can work with a single team from first assessment to long-term support."
+  >
+    <nav class="jump" aria-label="Expertise areas">
+      <ul role="list">
+        {capabilities.map((c) => <li><a href={`#${c.slug}`}>{c.title}</a></li>)}
+      </ul>
+    </nav>
+  </PageHeader>
+
+  <div class="container">
+    {
+      capabilities.map((c) => (
+        <section class="capability" id={c.slug} aria-labelledby={`${c.slug}-title`}>
+          <div class="capability__head">
+            <span class="icon-badge">
+              <Icon name={c.icon} />
+            </span>
+            <h2 id={`${c.slug}-title`}>{c.title}</h2>
+            <p class="capability__summary">{c.summary}</p>
+          </div>
+          <div class="capability__body">
+            <p>{c.detail}</p>
+            <div class="capability__cols">
+              <div>
+                <h3>What this can include</h3>
+                <ul role="list" class="checklist">
+                  {c.includes.map((item) => (
+                    <li>
+                      <Icon name="check" size={18} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div class="capability__outcome">
+                <h3>What it makes possible</h3>
+                <p>{c.outcome}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <div class="spacer"></div>
+  <PartnerBand
+    title="Not sure where to start?"
+    text="Many partners come to us with a challenge rather than a specification. We can help you define the problem, weigh the options, and decide what is worth building."
+  />
+</Base>
+
+<style>
+  .jump {
+    margin-top: 1rem;
+  }
+  .jump ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .jump a {
+    display: inline-block;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .jump a:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .capability {
+    display: grid;
+    gap: 2rem;
+    padding-block: clamp(3.5rem, 7vw, 6rem);
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 64em) {
+    .capability {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+  }
+  .capability__head {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    justify-items: start;
+  }
+  .capability__head h2 {
+    font-size: var(--step-3);
+  }
+  .capability__summary {
+    font-size: var(--step-1);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .capability__body {
+    display: grid;
+    gap: 2rem;
+    max-width: 44rem;
+  }
+  .capability__cols {
+    display: grid;
+    gap: 2rem;
+  }
+  @media (min-width: 40em) {
+    .capability__cols {
+      grid-template-columns: 1.3fr 1fr;
+    }
+  }
+  .capability__cols h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .checklist {
+    list-style: none;
+    display: grid;
+    gap: 0.65rem;
+  }
+  .checklist li {
+    display: flex;
+    gap: 0.7rem;
+    align-items: baseline;
+  }
+  .checklist :global(.icon) {
+    color: var(--green-ink);
+    flex: none;
+    transform: translateY(3px);
+  }
+
+  .capability__outcome {
+    padding: 1.5rem;
+    border-radius: var(--radius-m);
+    background: var(--blue-soft);
+    align-self: start;
+  }
+  .capability__outcome p {
+    color: var(--ink);
+    font-size: var(--step-1);
+    line-height: 1.45;
+    font-weight: 500;
+  }
+
+  .spacer {
+    height: var(--section);
+  }
+</style>

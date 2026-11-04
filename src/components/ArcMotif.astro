@@ -1,0 +1,24 @@
+---
+// The logo's orbit arc and leaf sweep, reduced to line work for use as a quiet ornament.
+interface Props {
+  class?: string;
+  tone?: 'light' | 'dark';
+}
+const { class: className, tone = 'light' } = Astro.props;
+const arc = tone === 'dark' ? 'rgb(255 255 255 / 0.14)' : '#dbe4ea';
+const ring = tone === 'dark' ? 'rgb(255 255 255 / 0.08)' : '#e8eef2';
+const leaf = tone === 'dark' ? 'rgb(124 178 80 / 0.55)' : 'rgb(101 150 59 / 0.35)';
+---
+
+<svg class:list={['arc-motif', className]} viewBox="0 0 600 600" fill="none" aria-hidden="true" focusable="false">
+  <circle cx="300" cy="300" r="290" stroke={ring} stroke-width="1" stroke-dasharray="2 8"></circle>
+  <path d="M95 505 A290 290 0 1 1 505 95" stroke={arc} stroke-width="18" stroke-linecap="round"></path>
+  <path d="M60 560 C200 470 360 420 590 360" stroke={leaf} stroke-width="3" stroke-linecap="round"></path>
+</svg>
+
+<style>
+  .arc-motif {
+    pointer-events: none;
+    overflow: visible;
+  }
+</style>

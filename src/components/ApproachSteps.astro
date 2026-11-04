@@ -1,0 +1,101 @@
+---
+import { approach } from '../data/content';
+---
+
+<ol class="steps" role="list">
+  {
+    approach.map((s, i) => (
+      <li class="step">
+        <span class="step__marker" aria-hidden="true">
+          {i + 1}
+        </span>
+        <h3>
+          <span class="visually-hidden">Step {i + 1}: </span>
+          {s.title}
+        </h3>
+        <p>{s.text}</p>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .steps {
+    --marker: 2.75rem;
+    list-style: none;
+    display: grid;
+    gap: 2.5rem;
+    position: relative;
+  }
+
+  .step {
+    position: relative;
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    padding-left: calc(var(--marker) + 1.25rem);
+  }
+
+  /* connecting track (vertical on small screens) */
+  .step::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--marker) / 2 - 1px);
+    top: var(--marker);
+    bottom: -2.5rem;
+    width: 2px;
+    background: linear-gradient(var(--line), var(--line)) no-repeat;
+  }
+  .step:last-child::before {
+    display: none;
+  }
+
+  .step__marker {
+    position: absolute;
+    left: 0;
+    top: -0.35rem;
+    display: grid;
+    place-items: center;
+    width: var(--marker);
+    height: var(--marker);
+    border-radius: 50%;
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .step:last-child .step__marker {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+
+  h3 {
+    font-size: var(--step-2);
+  }
+
+  @media (min-width: 56em) {
+    .steps {
+      grid-template-columns: repeat(4, 1fr);
+      gap: clamp(1.5rem, 3vw, 3rem);
+    }
+    .step {
+      padding-left: 0;
+      padding-top: calc(var(--marker) + 1.75rem);
+    }
+    .step::before {
+      left: var(--marker);
+      right: calc(-1 * clamp(1.5rem, 3vw, 3rem));
+      top: calc(var(--marker) / 2 - 1px);
+      bottom: auto;
+      width: auto;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue-soft), var(--line));
+    }
+    .step__marker {
+      top: 0;
+    }
+  }
+</style>

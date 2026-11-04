@@ -1,0 +1,135 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { nav, site, url } from '../config/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <Logo height={36} />
+        <p>
+          A technology partner applying software, data, and innovation to complex challenges across sectors,
+          communities, and countries.
+        </p>
+      </div>
+
+      <nav aria-label="Footer">
+        <h2 class="site-footer__title">Explore</h2>
+        <ul role="list">
+          {nav.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}
+          <li><a href={url('/contact')}>Contact</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="site-footer__title">Get in touch</h2>
+        <ul role="list" class="site-footer__contact">
+          <li>
+            <Icon name="mail" size={18} />
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          {
+            site.location && (
+              <li>
+                <Icon name="pin" size={18} />
+                <span>{site.location}</span>
+              </li>
+            )
+          }
+          <li>
+            <Icon name="github" size={18} />
+            <a href={site.github} rel="noopener">GitHub</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__base">
+      <p>&copy; {year} DevDataWorks. All rights reserved.</p>
+      <a href="#top" class="site-footer__top">Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: clamp(3.5rem, 6vw, 5rem) 2rem;
+    background: var(--mist);
+    border-top: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+  @media (min-width: 48em) {
+    .site-footer__grid {
+      grid-template-columns: 2fr 1fr 1.3fr;
+      gap: 3rem;
+    }
+  }
+
+  .site-footer__brand {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    align-content: start;
+    max-width: 24rem;
+  }
+  .site-footer__brand p {
+    color: var(--text-muted);
+  }
+
+  .site-footer__title {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+
+  ul {
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+  a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--blue);
+    text-decoration: underline;
+  }
+
+  .site-footer__contact li {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--text);
+  }
+  .site-footer__contact :global(.icon) {
+    color: var(--blue);
+    flex: none;
+  }
+
+  .site-footer__base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+  .site-footer__top {
+    color: var(--text-muted);
+  }
+</style>

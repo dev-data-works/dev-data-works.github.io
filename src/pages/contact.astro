@@ -1,0 +1,346 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Icon from '../components/Icon.astro';
+import { capabilities, sectors } from '../data/content';
+import { site } from '../config/site';
+
+const next = [
+  { title: 'We read and reply', text: 'A member of our team responds personally, usually within a few working days.' },
+  { title: 'An introductory call', text: 'We arrange a conversation to understand your context, goals, and constraints.' },
+  { title: 'A proposed way forward', text: 'If there is a good fit, we outline an approach, timeline, and options for working together.' },
+];
+---
+
+<Base
+  title="Contact"
+  description="Start a conversation with DevDataWorks about how technology and data can help address your organization's challenges."
+>
+  <PageHeader
+    kicker="Contact"
+    title="Start a conversation."
+    lede="Tell us about your organization and the challenge you are working on. There is no need for a detailed brief; a few sentences are enough to begin."
+  />
+
+  <section class="section">
+    <div class="container contact">
+      <div class="contact__form-wrap">
+        <form class="form" data-contact-form novalidate>
+          <div class="form__row">
+            <div class="field">
+              <label for="name">Your name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="organization">Organization</label>
+              <input id="organization" name="organization" type="text" autocomplete="organization" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+
+          <div class="form__row">
+            <div class="field">
+              <label for="interest">Area of interest <span class="optional">(optional)</span></label>
+              <select id="interest" name="interest">
+                <option value="">Select an area</option>
+                {capabilities.map((c) => <option>{c.title}</option>)}
+                <option>Not sure yet</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="sector">Sector <span class="optional">(optional)</span></label>
+              <select id="sector" name="sector">
+                <option value="">Select a sector</option>
+                {sectors.map((s) => <option>{s.title}</option>)}
+                <option>Other or cross-sector</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">How can we help?</label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+          </div>
+
+          <p class="form__error" role="alert" data-form-error hidden>
+            Please complete your name, organization, a valid email address, and a message.
+          </p>
+
+          <div class="form__actions">
+            <button class="button" type="submit">Compose email</button>
+            <p class="form__note">
+              This opens your email application with your message ready to send to {site.email}. Nothing is stored
+              on this website.
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <aside class="contact__aside" aria-label="Contact details">
+        <div class="details">
+          <h2>Contact details</h2>
+          <ul role="list">
+            <li>
+              <span class="icon-badge"><Icon name="mail" size={20} /></span>
+              <div>
+                <span class="details__label">Email</span>
+                <a href={`mailto:${site.email}`}>{site.email}</a>
+              </div>
+            </li>
+            {
+              site.location && (
+                <li>
+                  <span class="icon-badge">
+                    <Icon name="pin" size={20} />
+                  </span>
+                  <div>
+                    <span class="details__label">Location</span>
+                    <span>{site.location}</span>
+                  </div>
+                </li>
+              )
+            }
+            <li>
+              <span class="icon-badge"><Icon name="github" size={20} /></span>
+              <div>
+                <span class="details__label">GitHub</span>
+                <a href={site.github} rel="noopener">github.com/dev-data-works</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="next">
+          <h2>What happens next</h2>
+          <ol role="list">
+            {
+              next.map((n, i) => (
+                <li>
+                  <span class="next__num" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <h3>{n.title}</h3>
+                    <p>{n.text}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script define:vars={{ email: site.email }}>
+  const form = document.querySelector('[data-contact-form]');
+  const error = document.querySelector('[data-form-error]');
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+    const value = (key) => String(data.get(key) ?? '').trim();
+
+    if (!form.checkValidity()) {
+      error.hidden = false;
+      form.querySelector(':invalid')?.focus();
+      return;
+    }
+    error.hidden = true;
+
+    const subject = `Partnership enquiry from ${value('organization')}`;
+    const lines = [
+      value('message'),
+      '',
+      '---',
+      `Name: ${value('name')}`,
+      `Organization: ${value('organization')}`,
+      `Email: ${value('email')}`,
+    ];
+    if (value('interest')) lines.push(`Area of interest: ${value('interest')}`);
+    if (value('sector')) lines.push(`Sector: ${value('sector')}`);
+
+    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
+  });
+</script>
+
+<style>
+  .contact {
+    display: grid;
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+  @media (min-width: 64em) {
+    .contact {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    }
+  }
+
+  /* Form */
+  .form {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .form__row {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 40em) {
+    .form__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .field {
+    display: grid;
+    gap: 0.5rem;
+  }
+  label {
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .optional {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #c6d4de;
+    border-radius: var(--radius-s);
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  select {
+    appearance: none;
+    background: #fff
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%230b3558' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E")
+      no-repeat right 1rem center;
+    padding-right: 2.5rem;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: #9fb6c7;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgb(42 111 153 / 0.18);
+  }
+
+  .form__error {
+    padding: 0.85rem 1rem;
+    border-left: 3px solid #b3261e;
+    background: #fbeeed;
+    color: #8c1d18;
+    border-radius: 0 var(--radius-s) var(--radius-s) 0;
+    font-size: 0.95rem;
+  }
+  .form__actions {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    margin-top: 0.5rem;
+  }
+  .form__note {
+    max-width: 30rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  /* Aside */
+  .contact__aside {
+    display: grid;
+    gap: 2rem;
+    align-content: start;
+  }
+  .contact__aside h2 {
+    font-size: var(--step-1);
+    margin-bottom: 1.25rem;
+  }
+  .details,
+  .next {
+    padding: 2rem;
+    border-radius: var(--radius-m);
+  }
+  .details {
+    background: var(--mist);
+  }
+  .details ul {
+    list-style: none;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .details li {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .details li > div {
+    display: grid;
+    min-width: 0;
+  }
+  .details .icon-badge {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .details__label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .details a {
+    color: var(--ink);
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+
+  .next {
+    border: 1px solid var(--line);
+  }
+  .next ol {
+    list-style: none;
+    display: grid;
+    gap: 1.25rem;
+    padding: 0;
+    margin: 0;
+  }
+  .next li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+  }
+  .next__num {
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--blue);
+    color: var(--ink);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .next h3 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+  .next p {
+    font-size: 0.95rem;
+  }
+</style>

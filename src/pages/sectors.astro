@@ -1,0 +1,144 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PartnerBand from '../components/PartnerBand.astro';
+import Icon from '../components/Icon.astro';
+import { sectors } from '../data/content';
+---
+
+<Base
+  title="Sectors"
+  description="DevDataWorks applies technology and data across agriculture, water and sanitation, public health, climate, education, governance, and emerging challenges."
+>
+  <PageHeader
+    kicker="Sectors"
+    title="Different challenges, shared needs."
+    lede="Our expertise is not tied to a single field. We bring the same technical rigor and partnership approach to every sector, and learn the context of each one before we build."
+  />
+
+  <section class="section" aria-label="Sectors we support">
+    <div class="container">
+      <ul class="sector-list" role="list">
+        {
+          sectors.map((s) => (
+            <li class="sector" id={s.slug}>
+              <div class="sector__head">
+                <Icon name={s.icon} size={30} class="sector__icon" />
+                <h2>{s.title}</h2>
+              </div>
+              <p class="sector__context">{s.context}</p>
+              <div class="sector__examples">
+                <h3>Where technology and data can help</h3>
+                <ul role="list">
+                  {s.possibilities.map((item) => <li>{item}</li>)}
+                </ul>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="beyond-title">
+    <div class="container split">
+      <div class="split__aside section-head">
+        <Icon name="horizon" size={32} class="beyond__icon" />
+        <h2 id="beyond-title">Beyond these sectors.</h2>
+      </div>
+      <div class="prose">
+        <p class="lede">
+          New challenges rarely fit neatly into existing categories, and many of the most important ones sit between
+          sectors.
+        </p>
+        <p>
+          Because our work is grounded in transferable capabilities (sound data practice, well-built software, and
+          careful collaboration), we can adapt quickly to new contexts. Humanitarian response, urban services,
+          financial inclusion, energy access, and cross-sector programs all share the same need for reliable
+          information and tools that people trust.
+        </p>
+        <p>If your challenge is not listed here, we would still like to hear about it.</p>
+      </div>
+    </div>
+  </section>
+
+  <PartnerBand title="Tell us about your challenge." />
+</Base>
+
+<style>
+  .sector-list {
+    list-style: none;
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+  @media (min-width: 48em) {
+    .sector-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 72em) {
+    .sector-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .sector {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: 1.25rem;
+    padding: clamp(1.75rem, 3vw, 2.25rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: #fff;
+  }
+  .sector__head {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .sector__head :global(.sector__icon) {
+    color: var(--green-ink);
+  }
+  .sector h2 {
+    font-size: var(--step-2);
+    letter-spacing: -0.015em;
+  }
+  .sector__context {
+    color: var(--text);
+  }
+  .sector__examples {
+    align-self: end;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .sector__examples h3 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+  .sector__examples ul {
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .sector__examples li {
+    position: relative;
+    padding-left: 1.1rem;
+    color: var(--ink);
+    font-size: 0.975rem;
+  }
+  .sector__examples li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+
+  :global(.beyond__icon) {
+    color: var(--blue);
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+import ArcMotif from './ArcMotif.astro';
+import { site, url } from '../config/site';
+
+interface Props {
+  title?: string;
+  text?: string;
+}
+
+const {
+  title = 'Let’s build something meaningful.',
+  text = 'Every meaningful change starts with a conversation. Tell us about the challenge you are working on, and we will explore together how technology and data can help address it.',
+} = Astro.props;
+---
+
+<section class="partner" aria-labelledby="partner-title">
+  <div class="container">
+    <div class="partner__panel">
+      <ArcMotif class="partner__motif" tone="dark" />
+      <div class="partner__content">
+        <h2 id="partner-title">{title}</h2>
+        <p>{text}</p>
+        <div class="button-row">
+          <a class="button button--light" href={url('/contact')}>Start a conversation</a>
+          <a class="button button--outline-light" href={`mailto:${site.email}`}>Email {site.email}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .partner {
+    padding-block: 0 var(--section);
+  }
+
+  .partner__panel {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding: clamp(3rem, 7vw, 6.5rem) clamp(1.5rem, 6vw, 6rem);
+    border-radius: var(--radius-l);
+    background:
+      radial-gradient(120% 140% at 100% 0%, #154a72 0%, transparent 55%),
+      var(--ink);
+    color: rgb(255 255 255 / 0.82);
+  }
+
+  :global(.partner__motif) {
+    position: absolute;
+    z-index: -1;
+    width: min(46rem, 110%);
+    right: -14rem;
+    bottom: -18rem;
+  }
+
+  .partner__content {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 40rem;
+  }
+
+  h2 {
+    color: #fff;
+    font-size: var(--step-5);
+    font-stretch: 92%;
+    letter-spacing: -0.03em;
+    line-height: 1.04;
+  }
+
+  p {
+    font-size: var(--step-1);
+    line-height: 1.55;
+    max-width: 34rem;
+  }
+
+  .button-row {
+    margin-top: 0.75rem;
+  }
+
+  @media (max-width: 40em) {
+    :global(.partner__motif) {
+      right: -12rem;
+      bottom: -10rem;
+      width: 30rem;
+    }
+    .button-row .button {
+      width: 100%;
+    }
+  }
+</style>

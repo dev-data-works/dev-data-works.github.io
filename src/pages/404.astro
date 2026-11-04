@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { url } from '../config/site';
+---
+
+<Base title="Page not found" description="The page you are looking for could not be found.">
+  <PageHeader
+    kicker="Error 404"
+    title="This page could not be found."
+    lede="The address may be mistyped, or the page may have moved. Use the links below to continue."
+  >
+    <div class="button-row">
+      <a class="button" href={url('/')}>Go to the homepage</a>
+      <a class="button button--ghost" href={url('/contact')}>Contact us</a>
+    </div>
+  </PageHeader>
+</Base>

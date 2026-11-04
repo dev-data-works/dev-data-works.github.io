@@ -1,0 +1,39 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+import { url } from '../config/site';
+
+interface Props {
+  /** Rendered height in CSS pixels. */
+  height?: number;
+  class?: string;
+  eager?: boolean;
+}
+
+const { height = 40, class: className, eager = false } = Astro.props;
+const width = Math.round((height * logo.width) / logo.height);
+---
+
+<a href={url('/')} class:list={['logo', className]}>
+  <Image
+    src={logo}
+    alt="DevDataWorks home"
+    width={width}
+    height={height}
+    densities={[1, 2]}
+    format="webp"
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : 'auto'}
+  />
+</a>
+
+<style>
+  .logo {
+    display: inline-block;
+    line-height: 0;
+    border-radius: var(--radius-s);
+  }
+  .logo img {
+    height: auto;
+  }
+</style>

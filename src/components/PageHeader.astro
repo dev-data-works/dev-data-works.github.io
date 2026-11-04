@@ -1,0 +1,54 @@
+---
+import ArcMotif from './ArcMotif.astro';
+
+interface Props {
+  kicker: string;
+  title: string;
+  lede: string;
+}
+const { kicker, title, lede } = Astro.props;
+---
+
+<section class="page-header">
+  <ArcMotif class="page-header__motif" />
+  <div class="container page-header__inner">
+    <p class="kicker">{kicker}</p>
+    <h1>{title}</h1>
+    <p class="lede">{lede}</p>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-header {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-block: clamp(4rem, 9vw, 8rem) clamp(3.5rem, 7vw, 6rem);
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #fff 0%, var(--mist) 100%);
+  }
+  :global(.page-header__motif) {
+    position: absolute;
+    z-index: -1;
+    width: clamp(26rem, 48vw, 44rem);
+    right: clamp(-16rem, -10vw, -6rem);
+    top: 50%;
+    transform: translateY(-46%);
+  }
+  @media (max-width: 48em) {
+    :global(.page-header__motif) {
+      right: -15rem;
+      opacity: 0.55;
+    }
+  }
+  .page-header__inner {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+  h1 {
+    max-width: 18ch;
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.25rem);
+  }
+</style>
