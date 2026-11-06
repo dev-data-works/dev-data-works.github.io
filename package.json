@@ -9,7 +9,12 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "og": "npx -y playwright-core@1.48.2 screenshot --viewport-size=1200,630 \"file://$PWD/scripts/og/og.html\" public/og-image.jpg"
+    "og": "npx -y playwright-core@1.48.2 screenshot --viewport-size=1200,630 \"file://$PWD/scripts/og/og.html\" public/og-image.jpg",
+    "check:links": "node scripts/check-links.mjs",
+    "check:content": "node scripts/check-content.mjs",
+    "test:checks": "node scripts/test-checks.mjs",
+    "verify": "npm run build && npm run check:links && npm run check:content && npm run test:checks",
+    "lighthouse": "npx -y @lhci/cli@0.14.0 autorun"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

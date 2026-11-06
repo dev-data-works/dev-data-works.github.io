@@ -40,6 +40,29 @@ jobs:
           SITE_URL: ${{ vars.SITE_URL || 'https://dev-data-works.github.io' }}
           BASE_PATH: ${{ vars.BASE_PATH || '/' }}
 
+      - name: Check internal links and legacy anchors
+        run: npm run check:links
+
+      - name: Prove the checks can fail
+        run: npm run test:checks
+
+      - name: Check content (denylist; on push also placeholder contact)
+        run: node scripts/check-content.mjs ${{ github.event_name == 'push' && '--deploy' || '' }}
+        env:
+          # Newline-separated terms that must never be published. Repository secret;
+          # never commit the list itself. A push to main fails while it is missing.
+          CONTENT_DENYLIST: ${{ secrets.CONTENT_DENYLIST }}
+
+      - name: Lighthouse budgets (bytes and accessibility block; timings warn)
+        run: npx -y @lhci/cli@0.14.0 autorun
+
+      - name: Upload preview of the built site
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: dist
+
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
