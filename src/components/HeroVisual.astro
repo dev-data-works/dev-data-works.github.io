@@ -1,50 +1,45 @@
 ---
 /**
  * Hero illustration: the DevDataWorks mark (traced from the logo, see
- * src/assets/logo-mark.svg) on a field of data points, with orbits and a few
- * network nodes around it. Animated once on load (CSS only): the field settles,
- * the arc sweeps in, the bars rise one by one, the leaf grounds them, the nodes
- * connect. Nothing animates under reduced motion.
+ * src/assets/logo-mark.svg) centred on a round field of data points and two
+ * orbits, all sharing the logo circle's centre. Animated once on load (CSS
+ * only): the field settles, the arc sweeps in, the bars rise one by one, the
+ * leaf grounds them. Nothing animates under reduced motion.
  */
 import markRaw from '../assets/logo-mark.svg?raw';
 
-// Place the mark (viewBox 250 250 760 700) inside this 560 x 520 canvas.
-const mark = { x: 70, y: 72, width: 420 };
-const scale = mark.width / 760;
+// Place the mark (viewBox 250 250 760 700) so the logo circle's centre
+// (640, 637 in logo units, fitted to the arc) lands exactly on the canvas centre (280, 260).
+const center = { x: 280, y: 260 };
+const width = 420;
+const scale = width / 760;
+const mark = { x: +(center.x - (640 - 250) * scale).toFixed(2), y: +(center.y - (637 - 250) * scale).toFixed(2), width };
 const height = Math.round(700 * scale);
-const toCanvas = (x: number, y: number) => ({
-  x: +(mark.x + (x - 250) * scale).toFixed(1),
-  y: +(mark.y + (y - 250) * scale).toFixed(1),
-});
 
-// The logo's circle (centre and radius in logo units), used for the orbits.
-const ring = toCanvas(604, 575);
-const ringR = 340 * scale;
+// The logo's circle radius on the canvas, used for the orbits and the dot field.
+const ring = center;
+const ringR = 378 * scale; // outer edge of the arc
 const markSvg = markRaw
   .replace(' role="img" aria-label="DevDataWorks"', '')
   .replace('<svg ', `<svg class="hv-mark" x="${mark.x}" y="${mark.y}" width="${mark.width}" height="${height}" `);
 
-// Network nodes on the outer orbit, linked to the top of the tallest bar.
-const peak = toCanvas(770, 432);
-const outerR = ringR + 46;
-const nodes = [24, 70, 140, 196].map((a) => ({
-  x: +(ring.x + outerR * Math.cos((a * Math.PI) / 180)).toFixed(1),
-  y: +(ring.y - outerR * Math.sin((a * Math.PI) / 180)).toFixed(1),
-}));
+const outerR = ringR + 34;
 ---
 
 <div class="hero-visual" aria-hidden="true">
   <svg viewBox="0 0 560 520" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <pattern id="hv-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <!-- offset so one dot sits exactly on the centre and the grid is symmetric around it -->
+      <pattern id="hv-dots" x="18" y="18" width="20" height="20" patternUnits="userSpaceOnUse">
         <circle cx="2" cy="2" r="1.3" fill="#2a6f99"></circle>
       </pattern>
-      <radialGradient id="hv-fade" cx="50%" cy="50%" r="50%">
-        <stop offset="0" stop-color="#fff" stop-opacity="0.55"></stop>
+      <radialGradient id="hv-fade" gradientUnits="userSpaceOnUse" cx={center.x} cy={center.y} r={outerR + 10}>
+        <stop offset="0" stop-color="#fff" stop-opacity="0.7"></stop>
+        <stop offset="0.75" stop-color="#fff" stop-opacity="0.4"></stop>
         <stop offset="1" stop-color="#fff" stop-opacity="0"></stop>
       </radialGradient>
       <mask id="hv-mask">
-        <rect width="560" height="520" fill="url(#hv-fade)"></rect>
+        <circle cx={center.x} cy={center.y} r={outerR} fill="url(#hv-fade)"></circle>
       </mask>
     </defs>
 
@@ -55,24 +50,9 @@ const nodes = [24, 70, 140, 196].map((a) => ({
     <circle class="hv-orbit" cx={ring.x} cy={ring.y} r={outerR} stroke="#c9d7e1" stroke-width="1" stroke-dasharray="2 7"></circle>
     <circle class="hv-orbit" cx={ring.x} cy={ring.y} r={ringR * 0.62} stroke="#dbe4ea" stroke-width="1"></circle>
 
-    <!-- network links between outer nodes and the tallest bar -->
-    <g class="hv-links" stroke="#9db8cb" stroke-width="1">
-      <path d={`M${nodes[0].x} ${nodes[0].y} L${peak.x} ${peak.y} L${nodes[1].x} ${nodes[1].y}`}></path>
-      <path d={`M${nodes[2].x} ${nodes[2].y} L${nodes[3].x} ${nodes[3].y}`}></path>
-    </g>
-
     <!-- the mark itself -->
     <Fragment set:html={markSvg} />
 
-    <!-- nodes -->
-    <g class="hv-nodes">
-      {
-        nodes.map((n, i) => (
-          <circle class="hv-node" style={`--i:${i}`} cx={n.x} cy={n.y} r="6" fill="#fff" stroke={i % 2 ? '#509722' : '#2a6f99'} stroke-width="2" />
-        ))
-      }
-      <circle class="hv-node" style="--i:4" cx={peak.x} cy={peak.y} r="5" fill="#509722"></circle>
-    </g>
   </svg>
 </div>
 
@@ -95,7 +75,7 @@ const nodes = [24, 70, 140, 196].map((a) => ({
   }
   :global(.hv-mark .lm-arc) {
     transform-box: view-box;
-    transform-origin: 604px 575px;
+    transform-origin: 640px 637px;
     animation: hv-sweep 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.1s both;
   }
   :global(.hv-mark .lm-bar1),
@@ -118,15 +98,6 @@ const nodes = [24, 70, 140, 196].map((a) => ({
     transform-box: fill-box;
     transform-origin: 0% 100%;
     animation: hv-leaf 1s var(--ease) 0.4s both;
-  }
-  .hv-links {
-    animation: hv-fade 0.8s var(--ease) 1.45s both;
-  }
-  .hv-node {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: hv-pop 0.5s var(--ease) both;
-    animation-delay: calc(1.35s + var(--i) * 0.09s);
   }
 
   @keyframes hv-fade {
@@ -151,18 +122,10 @@ const nodes = [24, 70, 140, 196].map((a) => ({
       transform: translate(-12px, 10px) scale(0.94);
     }
   }
-  @keyframes hv-pop {
-    from {
-      opacity: 0;
-      transform: scale(0.3);
-    }
-  }
 
   @media (prefers-reduced-motion: reduce) {
     .hv-field,
     .hv-orbit,
-    .hv-links,
-    .hv-node,
     :global(.hv-mark .lm-arc),
     :global(.hv-mark .lm-bar1),
     :global(.hv-mark .lm-bar2),
