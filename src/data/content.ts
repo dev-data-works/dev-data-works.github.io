@@ -310,7 +310,7 @@ export const platformsLabel = 'Open platforms we build on and integrate with';
 export const platformsNote = 'Listed as technologies we work with. No partnership or endorsement implied.';
 
 export const stack = {
-  engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'React Native', 'Node.js', 'Go', 'Java', 'Spring Boot', 'PHP', 'Laravel', 'Rust', 'Scala', 'Clojure'],
+  engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'React Native', 'Astro', 'Svelte', 'Node.js', 'Go', 'Java', 'Spring Boot', 'PHP', 'Laravel', 'Rust', 'Scala', 'Clojure'],
   dataAndGis: ['PostgreSQL', 'PostGIS', 'MongoDB', 'Elasticsearch', 'Redis', 'Kafka', 'RabbitMQ', 'pandas', 'GeoServer', 'OpenLayers'],
   infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Keycloak', 'Google Cloud', 'AWS', 'Firebase', 'Nginx', 'GitHub Actions', 'CircleCI', 'Azure'],
   quality: ['OpenAPI (Swagger)', 'pytest', 'Jest', 'Selenium', 'Coveralls'],
