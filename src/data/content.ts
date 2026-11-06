@@ -301,6 +301,9 @@ export const platforms: Platform[] = [
   { name: 'CKAN', url: 'https://ckan.org', logo: 'ckan', wordmark: true },
   { name: 'DHIS2', url: 'https://dhis2.org', logo: 'dhis2', wordmark: true },
   { name: 'GeoNode', url: 'https://geonode.org', logo: 'geonode' },
+  { name: 'ODK', url: 'https://getodk.org', logo: 'odk', wordmark: true },
+  { name: 'Apache Superset', url: 'https://superset.apache.org', logo: 'superset', wordmark: true },
+  { name: 'OpenFn', url: 'https://www.openfn.org', logo: 'openfn' },
 ];
 
 export const platformsLabel = 'Open platforms we build on and integrate with';
