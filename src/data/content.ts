@@ -310,9 +310,9 @@ export const platformsLabel = 'Open platforms we build on and integrate with';
 export const platformsNote = 'Listed as technologies we work with. No partnership or endorsement implied.';
 
 export const stack = {
-  engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'Next.js', 'React Native', 'Expo', 'Astro', 'Svelte', 'Node.js', 'Express.js', 'Strapi', 'Go', 'Java', 'Spring Boot', 'PHP', 'Laravel', 'Rust', 'Scala', 'Clojure', 'Lua', 'Bash'],
+  engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'Next.js', 'React Native', 'Astro', 'Svelte', 'Node.js', 'Strapi', 'Go', 'Java', 'Spring Boot', 'PHP', 'Laravel', 'Rust', 'Scala', 'Clojure', 'Lua', 'Bash'],
   dataAndGis: ['PostgreSQL', 'PostGIS', 'MongoDB', 'Apache Solr', 'Elasticsearch', 'Redis', 'Kafka', 'RabbitMQ', 'Celery', 'pandas', 'Jupyter', 'Apache ECharts', 'GeoServer', 'GDAL', 'QGIS', 'OpenLayers', 'Leaflet'],
-  infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Keycloak', 'Auth0', 'Google Cloud', 'AWS', 'Firebase', 'Nginx', 'GitHub Actions', 'CircleCI', 'Travis CI', 'Semaphore CI', 'Azure', 'Sentry', 'Grafana'],
+  infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Nginx', 'Keycloak', 'GitHub Actions', 'Sentry', 'Grafana', 'Google Cloud', 'AWS', 'Azure'],
   quality: ['OpenAPI (Swagger)', 'pytest', 'Jest', 'Selenium', 'Coveralls'],
   documentation: ['Sphinx', 'DBML'],
   management: ['Notion', 'Asana', 'Zulip'],
