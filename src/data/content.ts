@@ -312,7 +312,7 @@ export const platformsNote = 'Listed as technologies we work with. No partnershi
 export const stack = {
   engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'Next.js', 'React Native', 'Astro', 'Svelte', 'Node.js', 'Strapi', 'Go', 'Java', 'Spring Boot', 'PHP', 'Laravel', 'Rust', 'Scala', 'Clojure', 'Lua', 'Bash'],
   dataAndGis: ['PostgreSQL', 'PostGIS', 'MongoDB', 'Apache Solr', 'Elasticsearch', 'Redis', 'Kafka', 'RabbitMQ', 'Celery', 'pandas', 'Jupyter', 'Apache ECharts', 'GeoServer', 'GDAL', 'QGIS', 'OpenLayers', 'Leaflet'],
-  infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Nginx', 'Keycloak', 'GitHub Actions', 'Sentry', 'Grafana', 'Google Cloud', 'AWS', 'Azure'],
+  infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Nginx', 'Keycloak', 'GitHub Actions', 'Sentry', 'Grafana', 'Google Cloud'],
   quality: ['OpenAPI (Swagger)', 'pytest', 'Jest', 'Selenium', 'Coveralls'],
   documentation: ['Sphinx', 'DBML'],
   management: ['Notion', 'Asana', 'Zulip'],
