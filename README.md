@@ -58,6 +58,30 @@ Nothing on the site, in its metadata, or in commit messages and issue text may p
 
 The content check enforces the names part automatically (below). The rest is a human review.
 
+## New-project form (`/contact/forms`)
+
+Not in the menu; linked from the contact page. Questions live in `src/data/enquiry-form.json` (ids are stable: change labels freely, never reuse a retired id). `src/data/enquiry-form.ts` adds "I don't know yet" to every question, fills the sector options from the site's sector list, and fails the build if the file is malformed (8-10 questions, unique ids).
+
+- **No backend yet** (`contact.enquiryEndpoint` empty in `src/config/site.ts`): Submit shows the answers with an "Email it to us" link and a Copy button. Nothing is sent from the page.
+- **With a backend:** set `contact.enquiryEndpoint` (for example `https://api.devdataworks.org/enquiries`). The page POSTs JSON with a 15 s timeout; on failure the answers stay on screen with the email option. When you switch this on, update the privacy line on the contact page (it says the site stores nothing).
+
+Payload (`Content-Type: application/json`):
+
+```json
+{
+  "schema": "enquiry/1",
+  "formVersion": 1,
+  "submissionId": "uuid",
+  "submittedAt": "2026-11-07T10:00:00.000Z",
+  "contact": { "email": "required", "name": "", "organisation": "" },
+  "answers": { "sector": ["health", "wash"], "scale": ["unknown"] },
+  "note": "",
+  "hp": ""
+}
+```
+
+Backend notes: allow CORS from the site origin; return 2xx (202 with an id is ideal); drop submissions whose `hp` honeypot is not empty; deduplicate on `submissionId`; reject unknown question or option ids; escape `note` before posting to Zulip; rate-limit at Nginx.
+
 ## Checks
 
 | Command | What it checks |

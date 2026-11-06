@@ -32,6 +32,12 @@ export const contact = {
   /** International format, e.g. '+62 812 0000 0000'. Hidden while empty. Business number only. */
   whatsapp: '',
   replyTime: 'two working days',
+  /**
+   * New-project form backend (POST, JSON, schema "enquiry/1"; see src/data/enquiry-form.ts),
+   * e.g. 'https://api.devdataworks.org/enquiries'. Must allow CORS from the site origin.
+   * Empty: the form shows the answers to copy or email instead of sending them.
+   */
+  enquiryEndpoint: '',
 };
 
 export type IntentId = 'proposal' | 'references' | 'project';

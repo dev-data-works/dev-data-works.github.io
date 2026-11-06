@@ -1,0 +1,457 @@
+---
+/**
+ * New-project enquiry form. Not in the main menu; linked from /contact.
+ * Questions come from src/data/enquiry-form.json (see enquiry-form.ts for the
+ * payload). With contact.enquiryEndpoint empty, Submit shows the answers to
+ * copy or email; with an endpoint, it POSTs JSON there.
+ */
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { enquiryForm, UNKNOWN } from '../../data/enquiry-form';
+import { contact, mailto, has } from '../../config/site';
+
+const endpoint = has(contact.enquiryEndpoint) ? contact.enquiryEndpoint : '';
+const labels = Object.fromEntries(
+  enquiryForm.questions.map((q) => [q.id, { label: q.label, options: Object.fromEntries(q.options.map((o) => [o.id, o.label])) }]),
+);
+const config = {
+  endpoint,
+  email: contact.email,
+  schema: enquiryForm.schema,
+  formVersion: enquiryForm.formVersion,
+  unknown: UNKNOWN.id,
+  labels,
+};
+---
+
+<Base
+  title="Tell us about your project"
+  description="A short multiple-choice form for new project enquiries to DevDataWorks."
+  noindex
+>
+  <PageHeader kicker="New project" title={enquiryForm.title} lede={enquiryForm.intro} />
+
+  <section class="section">
+    <div class="container form-wrap">
+      <noscript>
+        <p class="notice">
+          This form needs JavaScript to send. You can email us instead at
+          <a href={mailto('project')}>{contact.email}</a>.
+        </p>
+      </noscript>
+
+      <form class="enquiry" data-enquiry novalidate>
+        {
+          enquiryForm.questions.map((q, i) => (
+            <fieldset class="q" data-question={q.id} data-type={q.type}>
+              <legend>
+                <span class="q__num mono" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span class="q__label">{q.label}</span>
+                <span class="q__hint">{q.type === 'multi' ? 'Choose all that apply' : 'Choose one'}</span>
+              </legend>
+              <div class="q__options">
+                {q.options.map((o) => (
+                  <label class:list={['opt', { 'opt--unknown': o.id === UNKNOWN.id }]}>
+                    <input type={q.type === 'multi' ? 'checkbox' : 'radio'} name={q.id} value={o.id} />
+                    <span>{o.label}</span>
+                  </label>
+                ))}
+              </div>
+              <p class="q__error" role="alert" hidden>
+                Choose an answer, or "{UNKNOWN.label}".
+              </p>
+            </fieldset>
+          ))
+        }
+
+        <fieldset class="q q--contact">
+          <legend>
+            <span class="q__label">How can we reach you?</span>
+          </legend>
+          <div class="fields">
+            <label class="field field--wide">
+              <span>Email <em>(required)</em></span>
+              <input type="email" name="email" autocomplete="email" required />
+            </label>
+            <label class="field">
+              <span>Name <em>(optional)</em></span>
+              <input type="text" name="name" autocomplete="name" />
+            </label>
+            <label class="field">
+              <span>Organisation <em>(optional)</em></span>
+              <input type="text" name="organisation" autocomplete="organization" />
+            </label>
+            <label class="field field--wide">
+              <span>Anything else we should know? <em>(optional)</em></span>
+              <textarea name="note" rows="4" maxlength="2000"></textarea>
+            </label>
+            <label class="hp" aria-hidden="true">
+              Leave this empty <input type="text" name="hp" tabindex="-1" autocomplete="off" />
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="actions">
+          <button class="button" type="submit" data-submit>Send enquiry</button>
+          <p class="privacy">
+            {
+              endpoint
+                ? 'Your answers go to our team inbox and chat, are read only by our team to reply to you, and are not shared.'
+                : 'Nothing is sent from this page: your answers are prepared for you to email to us.'
+            }
+          </p>
+        </div>
+      </form>
+
+      <div class="result" data-result hidden tabindex="-1">
+        <h2 data-result-title>Your enquiry is ready</h2>
+        <p data-result-text></p>
+        <div class="result__actions" data-fallback>
+          <a class="button" data-mailto href="#">Email it to us</a>
+          <button class="button button--ghost" type="button" data-copy>Copy answers</button>
+        </div>
+        <p class="result__hint" data-fallback>
+          The email button opens your mail app; press Send there. No mail app? Copy the answers and send them to
+          <strong>{contact.email}</strong>.
+        </p>
+        <pre class="result__summary" data-summary></pre>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script define:vars={{ config }}>
+  const form = document.querySelector('[data-enquiry]');
+  const result = document.querySelector('[data-result]');
+  const $ = (s) => result.querySelector(s);
+
+  // "I don't know yet" excludes the other options in a multi-choice question.
+  form.addEventListener('change', (e) => {
+    const input = e.target;
+    if (input.type !== 'checkbox') return;
+    const group = form.querySelectorAll(`input[name="${input.name}"]`);
+    if (input.checked)
+      group.forEach((other) => {
+        if (other !== input && (input.value === config.unknown || other.value === config.unknown)) other.checked = false;
+      });
+    input.closest('.q').querySelector('.q__error').hidden = true;
+  });
+  form.addEventListener('change', (e) => {
+    if (e.target.type === 'radio') e.target.closest('.q').querySelector('.q__error').hidden = true;
+  });
+
+  const summaryText = (data) => {
+    const lines = ['New project enquiry', ''];
+    for (const [id, values] of Object.entries(data.answers)) {
+      const q = config.labels[id];
+      lines.push(`${q.label} ${values.map((v) => q.options[v]).join(', ')}`);
+    }
+    lines.push('', `Email: ${data.contact.email}`);
+    if (data.contact.name) lines.push(`Name: ${data.contact.name}`);
+    if (data.contact.organisation) lines.push(`Organisation: ${data.contact.organisation}`);
+    if (data.note) lines.push('', `Note: ${data.note}`);
+    lines.push('', `ref: ${Object.entries(data.answers).map(([k, v]) => `${k}=${v.join('+')}`).join(';')}`);
+    return lines.join('\n');
+  };
+
+  const showResult = (title, text, data, fallback) => {
+    const summary = summaryText(data);
+    $('[data-result-title]').textContent = title;
+    $('[data-result-text]').textContent = text;
+    $('[data-summary]').textContent = summary;
+    result.querySelectorAll('[data-fallback]').forEach((el) => (el.hidden = !fallback));
+    if (fallback) {
+      // Keep the mailto URL short enough for mail apps (~1,800 characters).
+      let body = summary;
+      const make = (b) => `mailto:${config.email}?subject=${encodeURIComponent('New project enquiry')}&body=${encodeURIComponent(b)}`;
+      while (make(body).length > 1800 && body.length > 200) body = body.slice(0, -100);
+      if (body !== summary) body += '\n[shortened: please paste the full answers]';
+      $('[data-mailto]').href = make(body);
+    }
+    form.hidden = true;
+    result.hidden = false;
+    result.focus();
+    result.scrollIntoView({ block: 'start' });
+  };
+
+  $('[data-copy]').addEventListener('click', async (e) => {
+    try {
+      await navigator.clipboard.writeText($('[data-summary]').textContent);
+      e.target.textContent = 'Copied';
+    } catch {
+      e.target.textContent = 'Select the text below to copy';
+    }
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const answers = {};
+    let firstInvalid = null;
+    form.querySelectorAll('[data-question]').forEach((fs) => {
+      const picked = [...fs.querySelectorAll('input:checked')].map((i) => i.value);
+      fs.querySelector('.q__error').hidden = picked.length > 0;
+      if (!picked.length && !firstInvalid) firstInvalid = fs;
+      answers[fs.dataset.question] = picked;
+    });
+    const email = form.elements.email;
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({ block: 'center' });
+      firstInvalid.querySelector('input').focus({ preventScroll: true });
+      return;
+    }
+    if (!email.checkValidity()) {
+      email.reportValidity();
+      return;
+    }
+    const data = {
+      schema: config.schema,
+      formVersion: config.formVersion,
+      submissionId: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      submittedAt: new Date().toISOString(),
+      contact: {
+        email: email.value.trim(),
+        name: form.elements.name.value.trim(),
+        organisation: form.elements.organisation.value.trim(),
+      },
+      answers,
+      note: form.elements.note.value.trim(),
+      hp: form.elements.hp.value,
+    };
+
+    if (!config.endpoint) {
+      showResult('Your enquiry is ready', 'Send it to us by email: your answers are below.', data, true);
+      return;
+    }
+    const button = form.querySelector('[data-submit]');
+    button.disabled = true;
+    button.textContent = 'Sending…';
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 15000);
+    try {
+      const res = await fetch(config.endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        signal: ctrl.signal,
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      showResult('Received, thank you', `A team member replies within two working days to ${data.contact.email}.`, data, false);
+    } catch {
+      showResult('We could not send it', 'The connection failed, but your answers are safe below. Please email them to us.', data, true);
+    } finally {
+      clearTimeout(timer);
+      button.disabled = false;
+      button.textContent = 'Send enquiry';
+    }
+  });
+</script>
+
+<style>
+  .form-wrap {
+    max-width: 52rem;
+  }
+  .notice {
+    margin-bottom: 2rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-m);
+    background: var(--mist);
+  }
+  .enquiry {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .q {
+    margin: 0;
+    padding: 1.75rem 0;
+    border: 0;
+    border-top: 1px solid var(--rule);
+    min-width: 0;
+  }
+  legend {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    row-gap: 0.25rem;
+    padding: 0;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  .q__num {
+    grid-row: span 2;
+    font-size: 0.85rem;
+    color: var(--blue);
+    padding-top: 0.3rem;
+  }
+  .q__label {
+    font-size: var(--step-1);
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+  }
+  .q__hint {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+  .q--contact legend {
+    grid-template-columns: 1fr;
+  }
+  .q__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-left: 2.5rem;
+  }
+  @media (max-width: 40em) {
+    legend {
+      grid-template-columns: 2rem 1fr;
+    }
+    .q__options {
+      padding-left: 0;
+    }
+  }
+  .opt {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--text);
+    font-size: 0.95rem;
+    line-height: 1.3;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .opt input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .opt:hover {
+    border-color: var(--blue);
+  }
+  .opt:has(input:checked) {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: #fff;
+  }
+  .opt:has(input:focus-visible) {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+  .opt--unknown {
+    border-style: dashed;
+    color: var(--text-muted);
+  }
+  .opt--unknown:has(input:checked) {
+    border-style: solid;
+    background: var(--text-muted);
+    border-color: var(--text-muted);
+  }
+  .q__error {
+    margin-top: 0.75rem;
+    padding-left: 2.5rem;
+    color: #a3341f;
+    font-size: 0.9rem;
+  }
+
+  .fields {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 40em) {
+    .fields {
+      grid-template-columns: 1fr 1fr;
+    }
+    .field--wide {
+      grid-column: 1 / -1;
+    }
+  }
+  .field {
+    display: grid;
+    gap: 0.4rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .field em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid #b9c9d5;
+    border-radius: var(--radius-s);
+    background: #fff;
+    font: inherit;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 1px;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .actions {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .privacy {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .result {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-l);
+    background: var(--mist);
+    outline: none;
+  }
+  .result h2 {
+    font-size: var(--step-3);
+  }
+  .result__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .result__hint {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+  .result__summary {
+    margin: 0;
+    padding: 1rem;
+    max-height: 22rem;
+    overflow: auto;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-s);
+    background: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    user-select: all;
+  }
+</style>

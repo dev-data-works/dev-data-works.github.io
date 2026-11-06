@@ -9,9 +9,11 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  /** Keep the page out of search results (it is also left out of the sitemap). */
+  noindex?: boolean;
 }
 
-const { title, description = site.description, image = '/og-image.jpg' } = Astro.props;
+const { title, description = site.description, image = '/og-image.jpg', noindex = false } = Astro.props;
 
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -39,6 +41,7 @@ if (has(links.github)) jsonLd.sameAs = [links.github];
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#0b3558" />
     <link rel="preload" as="font" type="font/woff2" href={fontUrl} crossorigin />

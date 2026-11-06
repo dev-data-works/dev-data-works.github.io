@@ -1,0 +1,114 @@
+{
+  "formVersion": 1,
+  "title": "Tell us about your project",
+  "intro": "Ten quick questions. Pick what fits; if you are not sure, choose \"I don't know yet\". It takes about two minutes.",
+  "questions": [
+    {
+      "id": "sector",
+      "label": "Which sector is the project in?",
+      "type": "multi",
+      "optionsFrom": "sectors",
+      "options": [{ "id": "other", "label": "Other" }]
+    },
+    {
+      "id": "scale",
+      "label": "What area will it cover?",
+      "type": "single",
+      "options": [
+        { "id": "site", "label": "One community or site" },
+        { "id": "district", "label": "One district or province" },
+        { "id": "country", "label": "A whole country" },
+        { "id": "multi-country", "label": "Several countries" }
+      ]
+    },
+    {
+      "id": "need",
+      "label": "What do you need the system to do?",
+      "type": "multi",
+      "options": [
+        { "id": "collect", "label": "Collect data in the field" },
+        { "id": "track", "label": "Track programme results" },
+        { "id": "early-warning", "label": "Early warning of hazards" },
+        { "id": "share", "label": "Share data and maps between organisations" },
+        { "id": "documents", "label": "Find and use documents, including asking questions of them" },
+        { "id": "improve", "label": "Fix or extend an existing system" },
+        { "id": "other", "label": "Other" }
+      ]
+    },
+    {
+      "id": "starting_point",
+      "label": "What do you use today?",
+      "type": "single",
+      "options": [
+        { "id": "nothing", "label": "Nothing yet" },
+        { "id": "paper", "label": "Paper or spreadsheets" },
+        { "id": "improve", "label": "A system that needs improving" },
+        { "id": "replace", "label": "A system that needs replacing" }
+      ]
+    },
+    {
+      "id": "users",
+      "label": "Who will use it?",
+      "type": "multi",
+      "options": [
+        { "id": "field", "label": "Field staff" },
+        { "id": "programme", "label": "Programme or M&E staff" },
+        { "id": "government", "label": "Government counterparts" },
+        { "id": "partners", "label": "Partner organisations" },
+        { "id": "donors", "label": "Donors" },
+        { "id": "public", "label": "The public" }
+      ]
+    },
+    {
+      "id": "connectivity",
+      "label": "What is the internet connection like where it will be used?",
+      "type": "single",
+      "options": [
+        { "id": "reliable", "label": "Reliable" },
+        { "id": "patchy", "label": "Patchy" },
+        { "id": "offline", "label": "Often offline" }
+      ]
+    },
+    {
+      "id": "sensitive_data",
+      "label": "Will it hold personal or sensitive data?",
+      "type": "single",
+      "options": [
+        { "id": "yes", "label": "Yes" },
+        { "id": "no", "label": "No" }
+      ]
+    },
+    {
+      "id": "hosting",
+      "label": "Where does it need to be hosted?",
+      "type": "single",
+      "options": [
+        { "id": "in-country", "label": "Must stay in-country or on government servers" },
+        { "id": "own-cloud", "label": "On our organisation's own cloud" },
+        { "id": "no-requirement", "label": "No requirement" }
+      ]
+    },
+    {
+      "id": "stage",
+      "label": "Where are you in the process?",
+      "type": "single",
+      "options": [
+        { "id": "exploring", "label": "Exploring an idea" },
+        { "id": "proposal", "label": "Writing a proposal or concept note" },
+        { "id": "funded", "label": "Funded and ready to start" },
+        { "id": "running", "label": "Already running, needs support" }
+      ]
+    },
+    {
+      "id": "timeline",
+      "label": "When would you like to start?",
+      "type": "single",
+      "options": [
+        { "id": "3m", "label": "Within 3 months" },
+        { "id": "3-6m", "label": "In 3 to 6 months" },
+        { "id": "6-12m", "label": "In 6 to 12 months" },
+        { "id": "later", "label": "Later" }
+      ]
+    }
+  ]
+}

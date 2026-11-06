@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import ContactCta from '../components/ContactCta.astro';
-import { contact, org, has } from '../config/site';
+import Icon from '../components/Icon.astro';
+import { contact, org, has, url } from '../config/site';
 
 const next = [
   `A team member replies within ${contact.replyTime}.`,
@@ -25,6 +26,10 @@ const next = [
     <div class="container contact">
       <div class="contact__main">
         <ContactCta variant="page" />
+        <div class="project-form">
+          <p><strong>Starting a new project?</strong> Answer ten quick multiple-choice questions instead of writing it all out.</p>
+          <a class="button" href={url('/contact/forms')}>Tell us about your project <Icon name="arrow" size={18} /></a>
+        </div>
         {
           has(org.location) && (
             <p class="contact__location">
@@ -71,6 +76,18 @@ const next = [
     display: grid;
     gap: 2rem;
     max-width: 40rem;
+  }
+  .project-form {
+    display: grid;
+    gap: 0.9rem;
+    justify-items: start;
+    padding: 1.5rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-m);
+    background: var(--mist);
+  }
+  .project-form strong {
+    color: var(--ink);
   }
   .contact__location {
     color: var(--text);

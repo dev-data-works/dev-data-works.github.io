@@ -10,6 +10,7 @@
         "http://localhost/sectors/",
         "http://localhost/about/",
         "http://localhost/contact/",
+        "http://localhost/contact/forms/",
         "http://localhost/404.html"
       ],
       "settings": {

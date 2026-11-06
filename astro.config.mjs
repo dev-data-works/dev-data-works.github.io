@@ -11,7 +11,7 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'ignore',
-  integrations: [sitemap({ filter: (page) => !page.includes('/404') })],
+  integrations: [sitemap({ filter: (page) => !page.includes('/404') && !page.includes('/contact/forms') })],
   build: { inlineStylesheets: 'auto' },
   devToolbar: { enabled: false },
 });
