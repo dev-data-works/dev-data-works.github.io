@@ -59,7 +59,7 @@ export const team: TeamMember[] = [
     role: 'Executive lead',
     years: 20,
     summary:
-      'Development programmes across many sectors, with earlier enterprise technology experience at a global IT company. Leads strategy and delivery.',
+      'Experience as a global team lead, principal solution manager and technical adviser in international development, specialising in technology for development, data platforms and water, sanitation and hygiene (WASH) programmes. Earlier enterprise technology experience at a global IT company. Leads strategy and delivery.',
   },
   {
     role: 'Technical lead',
