@@ -4,7 +4,8 @@
  * The reveal (data-reveal) sits on this header only: one per section.
  */
 interface Props {
-  index: string;
+  /** Two-digit number for sequenced sections; omit when the content is not a sequence. */
+  index?: string;
   label: string;
   title: string;
   /** id for the heading element (use with aria-labelledby on the section). */
@@ -20,7 +21,7 @@ const Heading = level === 2 ? 'h2' : 'h3';
 
 <header class:list={['section-head-x', className]} data-reveal>
   <p class="section-index">
-    <span class="section-index__num">{index}</span>
+    {index && <span class="section-index__num">{index}</span>}
     <span>{label}</span>
   </p>
   <Heading id={id}>{title}</Heading>

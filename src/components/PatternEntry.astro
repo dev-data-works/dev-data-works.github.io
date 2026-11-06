@@ -19,9 +19,6 @@ const titleId = `${pattern.slug}-title`;
   variant === 'teaser' ? (
     <li class="teaser">
       <a href={url(`/work#${pattern.slug}`)} class="teaser__link">
-        <span class="teaser__index mono" aria-hidden="true">
-          {pattern.index}
-        </span>
         <span class="teaser__body">
           <span class="teaser__title">{pattern.title}</span>
           <span class="teaser__summary">{pattern.summary}</span>
@@ -31,7 +28,7 @@ const titleId = `${pattern.slug}-title`;
     </li>
   ) : (
     <article class="pattern" id={pattern.slug} aria-labelledby={titleId}>
-      <SectionHead index={pattern.index} label="System pattern" title={pattern.title} id={titleId} lede={pattern.summary} />
+      <SectionHead label="System pattern" title={pattern.title} id={titleId} lede={pattern.summary} />
 
       <div class="pattern__grid">
         <div class="pattern__text">
@@ -91,17 +88,13 @@ const titleId = `${pattern.slug}-title`;
   /* Teaser (home page) */
   .teaser__link {
     display: grid;
-    grid-template-columns: 2.5rem 1fr auto;
+    grid-template-columns: 1fr auto;
     gap: 1rem;
     align-items: baseline;
     padding-block: 1.5rem;
     border-bottom: 1px solid var(--rule);
     color: inherit;
     text-decoration: none;
-  }
-  .teaser__index {
-    font-size: 0.85rem;
-    color: var(--blue);
   }
   .teaser__body {
     display: grid;

@@ -11,7 +11,6 @@ export type PatternSlug = 'messaging' | 'monitoring' | 'catalogue' | 'assistants
 
 export interface Pattern {
   slug: PatternSlug;
-  index: string;
   title: string;
   summary: string;
   problem: string;
@@ -25,7 +24,6 @@ export interface Pattern {
 export const patterns: Pattern[] = [
   {
     slug: 'messaging',
-    index: '01',
     title: 'Messaging-based advisory services',
     summary: 'Reach people on the messaging apps they already use.',
     problem:
@@ -46,7 +44,6 @@ export const patterns: Pattern[] = [
   },
   {
     slug: 'monitoring',
-    index: '02',
     title: 'Monitoring systems with offline data collection',
     summary: 'Collect data in the field and see it in dashboards the same week.',
     problem:
@@ -67,7 +64,6 @@ export const patterns: Pattern[] = [
   },
   {
     slug: 'catalogue',
-    index: '03',
     title: 'Data catalogues and map services',
     summary: 'Find, share and map data held by many partners.',
     problem:
@@ -87,7 +83,6 @@ export const patterns: Pattern[] = [
   },
   {
     slug: 'assistants',
-    index: '04',
     title: 'Document-grounded assistants',
     summary: 'Answers from your own documents, with sources.',
     problem:
@@ -301,9 +296,10 @@ export const platformsLabel = 'Open platforms we build on and integrate with';
 export const platformsNote = 'Listed as technologies we work with. No partnership or endorsement implied.';
 
 export const stack = {
-  engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'React Native'],
-  dataAndGis: ['PostgreSQL', 'PostGIS', 'Redis', 'GeoServer', 'OpenLayers', 'Vector search'],
-  infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'GitHub Actions', 'Google Cloud', 'AWS', 'Nginx'],
+  engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'React Native', 'Node.js', 'Go', 'Java', 'Spring Boot', 'PHP', 'Laravel'],
+  dataAndGis: ['PostgreSQL', 'PostGIS', 'MongoDB', 'Elasticsearch', 'Redis', 'Kafka', 'RabbitMQ', 'pandas', 'GeoServer', 'OpenLayers', 'Vector search'],
+  infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Google Cloud', 'AWS', 'Firebase', 'Nginx', 'GitHub Actions'],
+  quality: ['OpenAPI (Swagger)', 'Automated testing (pytest, Jest, Selenium)', 'Code coverage reporting', 'Continuous integration'],
 };
 
 export interface Step {

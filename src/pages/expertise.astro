@@ -57,7 +57,7 @@ import { url } from '../config/site';
                       return (
                         <li>
                           <a href={url(`/work#${slug}`)}>
-                            <span class="mono">{p.index}</span> {p.title}
+                            {p.title}
                           </a>
                         </li>
                       );
@@ -74,7 +74,7 @@ import { url } from '../config/site';
     }
 
     <section class="section stack-section" aria-labelledby="stack-title">
-      <SectionHead index="07" label="Stack" title="Tools and infrastructure we use" id="stack-title" />
+      <SectionHead label="Stack" title="Tools and infrastructure we use" id="stack-title" />
       <StackList />
     </section>
   </div>
@@ -184,11 +184,6 @@ import { url } from '../config/site';
   }
   .capability__evidence a {
     font-weight: 500;
-  }
-  .capability__evidence .mono {
-    display: inline-block;
-    width: 2rem;
-    font-size: 0.85rem;
   }
   .capability__advisory {
     color: var(--text-muted);

@@ -59,17 +59,19 @@ export const team: TeamMember[] = [
     role: 'Executive lead',
     years: 20,
     summary:
-      'Development programmes across many sectors, with earlier enterprise technology experience at a global IT company. Leads partnerships and delivery.',
+      'Development programmes across many sectors, with earlier enterprise technology experience at a global IT company. Leads strategy and delivery.',
   },
   {
     role: 'Technical lead',
     years: 15,
     summary:
-      'Software and data systems for international development. Designs the architecture of the systems the team builds.',
+      'Software and data systems for international development. Designs the architecture of every system we build and leads the engineering team.',
   },
   {
     role: 'Partnerships lead',
-    summary: "Master's degree. Business development and partner relations in the development sector.",
+    years: 20,
+    summary:
+      "Builds and maintains partnerships with donors, NGOs and governments around the world. Holds a master's degree in Media Studies and Broadcast Journalism, and follows how events and public debate shape development work.",
   },
 ];
 

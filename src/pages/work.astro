@@ -24,7 +24,7 @@ import { patterns, platformsLabel } from '../data/content';
           patterns.map((p) => (
             <li>
               <a href={`#${p.slug}`}>
-                <span class="mono">{p.index}</span> {p.title}
+                {p.title}
               </a>
             </li>
           ))
@@ -39,9 +39,9 @@ import { patterns, platformsLabel } from '../data/content';
 
   <section class="section section--mist" aria-labelledby="platforms-title">
     <div class="container work-tech">
-      <SectionHead index="05" label="Platforms" title={platformsLabel} id="platforms-title" />
+      <SectionHead label="Platforms" title={platformsLabel} id="platforms-title" />
       <PlatformRow />
-      <SectionHead index="06" label="Stack" title="Tools and infrastructure we use" id="stack-title" level={3} />
+      <SectionHead label="Stack" title="Tools and infrastructure we use" id="stack-title" level={3} />
       <StackList />
     </div>
   </section>
@@ -69,12 +69,6 @@ import { patterns, platformsLabel } from '../data/content';
   .jump a:hover {
     color: var(--blue);
     text-decoration: underline;
-  }
-  .jump .mono {
-    display: inline-block;
-    width: 2rem;
-    font-size: 0.85rem;
-    color: var(--blue);
   }
   .container > :global(.pattern + .pattern) {
     border-top: 1px solid var(--rule);
