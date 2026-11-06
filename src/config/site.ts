@@ -25,8 +25,10 @@ export const contact = {
   /**
    * While true, the deploy job fails (scripts/check-content.mjs --deploy) and
    * JSON-LD omits contactPoint. Set to false once the mailbox is live and tested.
+   * Owner decision 2026-11-07: shipped as false before forwarding is set up, so
+   * the team can review the live site; set up hello@devdataworks.org forwarding next.
    */
-  emailIsPlaceholder: true,
+  emailIsPlaceholder: false,
   /** International format, e.g. '+62 812 0000 0000'. Hidden while empty. Business number only. */
   whatsapp: '',
   replyTime: 'two working days',
