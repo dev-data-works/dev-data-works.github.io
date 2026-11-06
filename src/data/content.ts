@@ -86,23 +86,25 @@ export const patterns: Pattern[] = [
   },
   {
     slug: 'assistants',
-    title: 'Document-grounded assistants',
-    summary: 'Answers from your own documents, with sources.',
+    title: 'Knowledge assistants grounded in your own documents',
+    summary: 'Answers from your own documents, with sources, wherever people already ask.',
     problem:
-      'Staff lose time searching manuals, guidelines and reports. General chatbots give confident answers that are not based on your material.',
+      'Staff and communities lose time searching manuals, guidelines and reports. General chatbots give confident answers that are not based on your material, and sending programme data to a public chatbot is often not an option.',
     features: [
-      'Answers drawn only from documents you choose, with the source shown.',
-      'Document sets updated without retraining a model.',
-      'People stay responsible for decisions. The assistant explains; it does not decide.',
+      'Knowledge bases you manage yourself: add documents through an ingestion pipeline, keep them current, and let the assistant pick the right knowledge base for each question.',
+      'Answers with their sources, delivered in a chat widget on any website, inside your own apps, over messaging apps, or through an API.',
+      'Can run fully on your own servers with a choice of language models, local or hosted, so sensitive data stays with you.',
+      'Answer quality measured with standard evaluation metrics, and prompts versioned centrally so the assistant improves over time.',
     ],
-    stack: ['Python', 'Vector search', 'Language model APIs', 'PostgreSQL'],
-    caption: 'How a document-grounded assistant answers a question.',
+    caption: 'How a knowledge assistant answers a question from your own documents.',
     flow: [
-      "Your documents are indexed into a vector store.",
-      "A staff question retrieves the relevant passages from the vector store.",
-      "The language model answers from those passages only.",
-      "The answer goes back to staff with its sources.",
+      'Documents go through an ingestion pipeline into knowledge bases you manage.',
+      'People ask a question in a chat widget, an app or a messaging app.',
+      'The assistant picks the right knowledge base and retrieves the relevant passages.',
+      'A language model, local or hosted, answers from those passages only, and the answer goes back with its sources.',
+      'Answers are evaluated and prompts versioned, so quality can be measured and improved.',
     ],
+    stack: ['Python', 'Vector search', 'Language models (local or hosted)', 'Model Context Protocol', 'Task queues', 'Embeddable widget'],
   },
 ];
 
@@ -219,8 +221,8 @@ export const sectors: Sector[] = [
     slug: 'agriculture',
     icon: 'leaf',
     title: 'Agriculture and food systems',
-    application: 'Advisory messaging for producers, farmer registries and field monitoring.',
-    patterns: ['messaging', 'monitoring'],
+    application: 'Advisory messaging and knowledge assistants for producers, farmer registries and field monitoring.',
+    patterns: ['messaging', 'assistants', 'monitoring'],
   },
   {
     slug: 'wash',
