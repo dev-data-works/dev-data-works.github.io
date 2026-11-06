@@ -7,6 +7,7 @@ import PlatformRow from '../components/PlatformRow.astro';
 import StackList from '../components/StackList.astro';
 import PartnerBand from '../components/PartnerBand.astro';
 import { patterns, platformsLabel } from '../data/content';
+import { url } from '../config/site';
 ---
 
 <Base
@@ -43,6 +44,10 @@ import { patterns, platformsLabel } from '../data/content';
       <PlatformRow />
       <SectionHead label="Stack" title="Tools and infrastructure we use" id="stack-title" level={3} />
       <StackList />
+      <p class="work-tech__note">
+        Personal data in these systems is handled under the same rules on every project.
+        <a href={url('/about#data-protection')}>How we protect data</a>
+      </p>
     </div>
   </section>
 
@@ -79,6 +84,9 @@ import { patterns, platformsLabel } from '../data/content';
   }
   .work-tech > :global(.section-head-x:not(:first-child)) {
     margin-top: 2.5rem;
+  }
+  .work-tech__note a {
+    font-weight: 600;
   }
   .section-gap {
     height: var(--section);

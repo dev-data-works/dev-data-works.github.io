@@ -345,6 +345,38 @@ export const principles: Step[] = [
   },
 ];
 
+/** How personal and programme data is handled in every project (practices, not certifications). */
+export const dataProtection: Step[] = [
+  {
+    title: 'Privacy by design',
+    text: 'We follow GDPR principles: collect only what the project needs, for a stated purpose, with consent where it is required.',
+  },
+  {
+    title: 'Data processing agreements',
+    text: 'Before we handle personal data, we sign a data processing agreement, ours or your template.',
+  },
+  {
+    title: 'Retention and deletion',
+    text: 'Each dataset has an agreed retention period. At the end of a project, data is handed back or deleted.',
+  },
+  {
+    title: 'Access control',
+    text: 'Role-based access with least privilege and multi-factor sign-in for administrators. Access is reviewed and removed at handover.',
+  },
+  {
+    title: 'Security in operation',
+    text: 'Encryption in transit and at rest, tested backups, dependencies kept up to date, and no secrets in code.',
+  },
+  {
+    title: 'Incident response',
+    text: 'Every project has a written response plan. If a breach affects your data, we tell you within 72 hours of confirming it.',
+  },
+  {
+    title: 'Acceptable use',
+    text: 'Team devices are encrypted and kept updated, and client data stays on systems approved for the project.',
+  },
+];
+
 /** Capabilities and sectors that list a pattern (links are stored once, on them). */
 export function appliesTo(slug: PatternSlug) {
   return {

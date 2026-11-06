@@ -5,7 +5,7 @@ import PartnerBand from '../components/PartnerBand.astro';
 import SectionHead from '../components/SectionHead.astro';
 import TeamRoles from '../components/TeamRoles.astro';
 import ApproachSteps from '../components/ApproachSteps.astro';
-import { principles } from '../data/content';
+import { principles, dataProtection } from '../data/content';
 import { org, has } from '../config/site';
 
 const facts = [
@@ -56,11 +56,33 @@ const facts = [
     </div>
   </section>
 
+  <section class="section section--rule" id="data-protection" aria-labelledby="data-title">
+    <div class="container stack">
+      <SectionHead
+        index="04"
+        label="Data protection"
+        title="How we protect data in our projects."
+        id="data-title"
+        lede="The systems we build often hold personal data about the people programmes serve. These practices apply to every project."
+      />
+      <ul class="practices" role="list">
+        {
+          dataProtection.map((p) => (
+            <li class="practice">
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
   {
     facts.length > 0 && (
       <section class="section section--rule" aria-labelledby="facts-title">
         <div class="container stack">
-          <SectionHead index="04" label="Organisation" title="Organisation details" id="facts-title" />
+          <SectionHead index="05" label="Organisation" title="Organisation details" id="facts-title" />
           <dl class="facts">
             {facts.map((f) => (
               <div>
@@ -109,6 +131,36 @@ const facts = [
   }
   .principle h3 {
     font-size: var(--step-2);
+  }
+  .practices {
+    list-style: none;
+    display: grid;
+    column-gap: clamp(2rem, 4vw, 3rem);
+  }
+  @media (min-width: 48em) {
+    .practices {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 72em) {
+    .practices {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .practice {
+    display: grid;
+    align-content: start;
+    gap: 0.4rem;
+    padding-block: 1.25rem 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .practice h3 {
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+  }
+  .practice p {
+    color: var(--text);
+    font-size: 0.975rem;
   }
   .facts {
     display: grid;
