@@ -1,0 +1,42 @@
+---
+/** How the team uses AI in its own work, plus the AI tools and techniques it builds with. */
+import StackList from './StackList.astro';
+import { aiPractice } from '../data/content';
+
+interface Props {
+  /** Heading level, so the block fits the page outline it sits in. */
+  level?: 2 | 3;
+}
+const { level = 3 } = Astro.props;
+const Heading = level === 2 ? 'h2' : 'h3';
+---
+
+<div class="ai-practice">
+  <div class="ai-practice__intro" data-reveal>
+    <Heading class="ai-practice__title">{aiPractice.title}</Heading>
+    <p>{aiPractice.text}</p>
+  </div>
+  <StackList groups={aiPractice.groups} />
+</div>
+
+<style>
+  .ai-practice {
+    display: grid;
+    gap: 1.75rem;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .ai-practice__intro {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 44rem;
+  }
+  .ai-practice__title {
+    font-size: var(--step-3);
+    max-width: 24ch;
+  }
+  .ai-practice__intro p {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--text);
+  }
+</style>

@@ -5,6 +5,7 @@ import PatternEntry from '../components/PatternEntry.astro';
 import SectionHead from '../components/SectionHead.astro';
 import PlatformRow from '../components/PlatformRow.astro';
 import StackList from '../components/StackList.astro';
+import AiPractice from '../components/AiPractice.astro';
 import PartnerBand from '../components/PartnerBand.astro';
 import { patterns, platformsLabel } from '../data/content';
 import { url } from '../config/site';
@@ -44,6 +45,7 @@ import { url } from '../config/site';
       <PlatformRow />
       <SectionHead label="Stack" title="Tools and infrastructure we use" id="stack-title" level={3} />
       <StackList />
+      <AiPractice />
       <p class="work-tech__note">
         Personal data in these systems is handled under the same rules on every project.
         <a href={url('/about#data-protection')}>How we protect data</a>

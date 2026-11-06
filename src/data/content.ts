@@ -316,6 +316,20 @@ export const stack = {
   quality: ['OpenAPI (Swagger)', 'Automated testing (pytest, Jest, Selenium)', 'Code coverage reporting', 'Continuous integration'],
 };
 
+/** How the team uses AI in its own work, and the AI tools and techniques it builds with. */
+export const aiPractice = {
+  title: 'AI-assisted development. Human-led engineering.',
+  text: 'We use AI to accelerate development, testing and documentation, while keeping architecture, security, code quality and delivery decisions in the hands of experienced engineers.',
+  groups: [
+    { title: 'Development assistance', items: ['Claude', 'GitHub Copilot', 'Gemini'] },
+    { title: 'AI platforms and integration', items: ['OpenAI', 'Ollama', 'Hugging Face'] },
+    {
+      title: 'Architecture and techniques',
+      items: ['Retrieval-augmented generation (RAG)', 'Model Context Protocol (MCP)', 'Vector embeddings', 'AI agents'],
+    },
+  ],
+};
+
 export interface Step {
   title: string;
   text: string;

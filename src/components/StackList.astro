@@ -1,12 +1,19 @@
 ---
 import { stack } from '../data/content';
 
-const groups = [
-  { title: 'Engineering', items: stack.engineering },
-  { title: 'Data and GIS', items: stack.dataAndGis },
-  { title: 'Infrastructure', items: stack.infrastructure },
-  { title: 'Quality and APIs', items: stack.quality },
-];
+interface Props {
+  /** Groups to show; defaults to the site-wide engineering stack. */
+  groups?: { title: string; items: string[] }[];
+}
+
+const {
+  groups = [
+    { title: 'Engineering', items: stack.engineering },
+    { title: 'Data and GIS', items: stack.dataAndGis },
+    { title: 'Infrastructure', items: stack.infrastructure },
+    { title: 'Quality and APIs', items: stack.quality },
+  ],
+} = Astro.props;
 ---
 
 <dl class="stack">
@@ -42,7 +49,7 @@ const groups = [
   }
   @media (min-width: 48em) {
     .stack__group {
-      grid-template-columns: 12rem 1fr;
+      grid-template-columns: 14rem 1fr;
       align-items: baseline;
     }
   }
