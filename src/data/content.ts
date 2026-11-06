@@ -67,22 +67,25 @@ export const patterns: Pattern[] = [
   },
   {
     slug: 'catalogue',
-    title: 'Data catalogues and map services',
-    summary: 'Find, share and map data held by many partners.',
+    title: 'Federated data platforms and map services',
+    summary: 'One place to find, map and analyse data held by many partners, with access each partner controls.',
     problem:
-      'Datasets are spread across partner organisations in different formats. No one can see what exists, where it is, or whether it is current.',
+      'Datasets sit with different partners, countries and agencies, in different formats and systems. No one can see what exists or whether it is current, and sharing stalls because partners cannot control who sees what.',
     features: [
-      'A searchable catalogue with metadata and an API, built on CKAN.',
-      'Map services to view, query and download geospatial data.',
-      'Harvesting that keeps records from partner catalogues up to date.',
+      'A catalogue built on CKAN with spatial search and an API, harvesting records from partner catalogues and standard metadata services so they stay current.',
+      'Map services to view, query and download vector and raster data, analysis of a selected area in the browser, and custom maps that users compose from the layers they may access.',
+      'Single sign-on across the platform, with roles scoped by organisation or country, delegated administration and an audit trail of every access change.',
+      'Permissions enforced on the API and on the map services themselves, so direct requests and shared maps never expose restricted layers.',
     ],
-    stack: ['CKAN', 'GeoServer', 'PostGIS', 'OpenLayers', 'Python'],
-    caption: 'How a data catalogue and map services work together.',
+    caption: 'How a federated data platform connects partner data, maps and access rules.',
     flow: [
-      "A harvester copies dataset records from partner catalogues into the CKAN catalogue.",
-      "Geospatial data is stored in PostGIS and published by GeoServer as map services.",
-      "The web map searches the catalogue and shows GeoServer layers to users.",
+      'A harvester keeps records from partner catalogues current in the CKAN catalogue.',
+      'Geospatial data is stored in PostGIS and published by GeoServer as standard map services.',
+      'Users sign in once; their role and their organisation or country decide what they can see and manage.',
+      'In the web map they search the catalogue, compose custom maps and analyse selected areas, using only layers they may access.',
+      'The catalogue API and map services check the same permissions on every request, including requests from other systems.',
     ],
+    stack: ['CKAN', 'GeoServer', 'PostGIS', 'OpenLayers', 'Keycloak', 'OGC services (WMS, WFS, WCS)', 'Python'],
   },
   {
     slug: 'assistants',
@@ -283,7 +286,7 @@ export const platformsNote = 'Listed as technologies we work with. No partnershi
 export const stack = {
   engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'React Native', 'Node.js', 'Go', 'Java', 'Spring Boot', 'PHP', 'Laravel'],
   dataAndGis: ['PostgreSQL', 'PostGIS', 'MongoDB', 'Elasticsearch', 'Redis', 'Kafka', 'RabbitMQ', 'pandas', 'GeoServer', 'OpenLayers', 'Vector search'],
-  infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Google Cloud', 'AWS', 'Firebase', 'Nginx', 'GitHub Actions'],
+  infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Keycloak', 'Google Cloud', 'AWS', 'Firebase', 'Nginx', 'GitHub Actions'],
   quality: ['OpenAPI (Swagger)', 'Automated testing (pytest, Jest, Selenium)', 'Code coverage reporting', 'Continuous integration'],
 };
 
