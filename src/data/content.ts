@@ -43,7 +43,7 @@ export const patterns: Pattern[] = [
       "Approved data feeds dashboards, PDF and Excel reports, and AI insights for managers.",
       "An open API serves the same data to analysis, GIS and BI tools.",
     ],
-    stack: ['Django', 'React', 'React Native', 'PostgreSQL', 'Docker'],
+    stack: ['Django', 'React', 'React Native', 'PostgreSQL'],
   },
   {
     slug: 'early-warning',
@@ -65,7 +65,7 @@ export const patterns: Pattern[] = [
       'The published map is combined with exposure, vulnerability and eligibility data.',
       'Decision-makers use the result to plan anticipatory and response activities.',
     ],
-    stack: ['Python', 'Django', 'GeoNode', 'GeoServer', 'PostGIS', 'Remote sensing (CHIRPS, NDVI, LST)', 'Scheduled jobs'],
+    stack: ['Python', 'Django', 'GeoNode', 'GeoServer', 'PostGIS', 'GDAL'],
   },
   {
     slug: 'catalogue',
@@ -87,7 +87,7 @@ export const patterns: Pattern[] = [
       'In the web map they search the catalogue, compose custom maps and analyse selected areas, using only layers they may access.',
       'The catalogue API and map services check the same permissions on every request, including requests from other systems.',
     ],
-    stack: ['CKAN', 'Apache Solr', 'GeoServer', 'PostGIS', 'OpenLayers', 'Keycloak', 'OGC services (WMS, WFS, WCS)', 'Python'],
+    stack: ['CKAN', 'Apache Solr', 'GeoServer', 'PostGIS', 'OpenLayers', 'Keycloak'],
   },
   {
     slug: 'knowledge',
@@ -108,7 +108,7 @@ export const patterns: Pattern[] = [
       'Members sign in once, manage their organisation and expert profiles, and search the library and map.',
       'AI tagging and recommendations, built on the shared database, point members to relevant resources and people.',
     ],
-    stack: ['Next.js', 'React', 'Headless CMS', 'PostgreSQL', 'OpenID Connect', 'Kubernetes'],
+    stack: ['Next.js', 'React', 'PostgreSQL', 'OpenID Connect'],
   },
   {
     slug: 'assistants',
@@ -130,7 +130,7 @@ export const patterns: Pattern[] = [
       'A language model, local or hosted, answers from those passages only, and the answer goes back with its sources.',
       'Answers are evaluated and prompts versioned, so quality can be measured and improved.',
     ],
-    stack: ['Python', 'Vector search', 'Language models (local or hosted)', 'Model Context Protocol', 'Task queues', 'Embeddable widget'],
+    stack: ['Python', 'FastAPI', 'Model Context Protocol', 'Ollama'],
   },
 ];
 
