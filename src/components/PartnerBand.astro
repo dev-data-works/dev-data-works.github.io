@@ -1,7 +1,8 @@
 ---
 import ArcMotif from './ArcMotif.astro';
 import ContactCta from './ContactCta.astro';
-import type { IntentId } from '../config/site';
+import Icon from './Icon.astro';
+import { url, type IntentId } from '../config/site';
 
 interface Props {
   title?: string;
@@ -24,6 +25,12 @@ const {
         <h2 id="partner-title">{title}</h2>
         <p>{text}</p>
         <ContactCta variant="band" tone="dark" intents={intents} />
+        <div class="partner__form">
+          <p>Starting a new project? Ten quick multiple-choice questions instead of a long email.</p>
+          <a class="button button--light" href={url('/contact/forms')}>
+            Tell us about your project <Icon name="arrow" size={18} />
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -54,6 +61,16 @@ const {
     bottom: -18rem;
   }
 
+  .partner__form {
+    display: grid;
+    gap: 0.9rem;
+    justify-items: start;
+    margin-top: 0.5rem;
+  }
+  .partner__form p {
+    font-size: 1rem;
+    color: rgb(255 255 255 / 0.82);
+  }
   .partner__content {
     display: grid;
     gap: 1.5rem;
