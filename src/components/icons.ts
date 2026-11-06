@@ -35,6 +35,7 @@ export const icons = {
   arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
   close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  chat: '<path d="M4 18.5V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H8l-4 2.5Z"/>',
   check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
 } as const;
 

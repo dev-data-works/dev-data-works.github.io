@@ -1,15 +1,18 @@
 ---
 import ArcMotif from './ArcMotif.astro';
-import { site, url } from '../config/site';
+import ContactCta from './ContactCta.astro';
+import type { IntentId } from '../config/site';
 
 interface Props {
   title?: string;
   text?: string;
+  intents?: IntentId[];
 }
 
 const {
-  title = 'Let’s build something meaningful.',
-  text = 'Every meaningful change starts with a conversation. Tell us about the challenge you are working on, and we will explore together how technology and data can help address it.',
+  title = 'Reviewing a proposal from us?',
+  text = 'Ask us anything about it, or request CVs and references for the team. We reply within two working days.',
+  intents = ['proposal', 'references'],
 } = Astro.props;
 ---
 
@@ -20,10 +23,7 @@ const {
       <div class="partner__content">
         <h2 id="partner-title">{title}</h2>
         <p>{text}</p>
-        <div class="button-row">
-          <a class="button button--light" href={url('/contact')}>Start a conversation</a>
-          <a class="button button--outline-light" href={`mailto:${site.email}`}>Email {site.email}</a>
-        </div>
+        <ContactCta variant="band" tone="dark" intents={intents} />
       </div>
     </div>
   </div>
@@ -63,7 +63,6 @@ const {
   h2 {
     color: #fff;
     font-size: var(--step-5);
-    font-stretch: 92%;
     letter-spacing: -0.03em;
     line-height: 1.04;
   }
@@ -74,18 +73,12 @@ const {
     max-width: 34rem;
   }
 
-  .button-row {
-    margin-top: 0.75rem;
-  }
 
   @media (max-width: 40em) {
     :global(.partner__motif) {
       right: -12rem;
       bottom: -10rem;
       width: 30rem;
-    }
-    .button-row .button {
-      width: 100%;
     }
   }
 </style>

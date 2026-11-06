@@ -1,7 +1,8 @@
 ---
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { nav, site, url } from '../config/site';
+import ContactCta from './ContactCta.astro';
+import { nav, site, org, links, has, url } from '../config/site';
 
 const year = new Date().getFullYear();
 ---
@@ -11,13 +12,10 @@ const year = new Date().getFullYear();
     <div class="site-footer__grid">
       <div class="site-footer__brand">
         <Logo height={36} />
-        <p>
-          A technology partner applying software, data, and innovation to complex challenges across sectors,
-          communities, and countries.
-        </p>
+        <p>Data and software systems for development programmes.</p>
       </div>
 
-      <nav aria-label="Footer">
+      <nav aria-label="Footer" class="site-footer__nav">
         <h2 class="site-footer__title">Explore</h2>
         <ul role="list">
           {nav.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}
@@ -30,26 +28,30 @@ const year = new Date().getFullYear();
         <ul role="list" class="site-footer__contact">
           <li>
             <Icon name="mail" size={18} />
-            <a href={`mailto:${site.email}`}>{site.email}</a>
+            <ContactCta variant="compact" />
           </li>
           {
-            site.location && (
+            has(org.location) && (
               <li>
                 <Icon name="pin" size={18} />
-                <span>{site.location}</span>
+                <span>{org.location}</span>
               </li>
             )
           }
-          <li>
-            <Icon name="github" size={18} />
-            <a href={site.github} rel="noopener">GitHub</a>
-          </li>
+          {
+            has(links.github) && (
+              <li>
+                <Icon name="github" size={18} />
+                <a href={links.github} rel="noopener">GitHub</a>
+              </li>
+            )
+          }
         </ul>
       </div>
     </div>
 
     <div class="site-footer__base">
-      <p>&copy; {year} DevDataWorks. All rights reserved.</p>
+      <p>&copy; {year} {has(org.legalName) ? org.legalName : site.name}</p>
       <a href="#top" class="site-footer__top">Back to top</a>
     </div>
   </div>

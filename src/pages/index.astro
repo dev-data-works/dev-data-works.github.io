@@ -28,12 +28,6 @@ import { url } from '../config/site';
       </div>
     </div>
 
-    <div class="container">
-      <p class="hero__audience">
-        Working with international development organizations, NGOs, government institutions, multilateral agencies,
-        research institutions, social enterprises, and the private sector.
-      </p>
-    </div>
   </section>
 
   <!-- B. What we do -->
@@ -53,9 +47,6 @@ import { url } from '../config/site';
         {
           pillars.map((p) => (
             <li class="pillar">
-              <span class="icon-badge">
-                <Icon name={p.icon} />
-              </span>
               <div>
                 <h3>{p.title}</h3>
                 <p>{p.text}</p>
@@ -124,7 +115,7 @@ import { url } from '../config/site';
             <li class="sector">
               <Icon name={s.icon} size={26} class="sector__icon" />
               <h3>{s.title}</h3>
-              <p>{s.summary}</p>
+              <p>{s.application}</p>
             </li>
           ))
         }
