@@ -1,73 +1,44 @@
 ---
+/**
+ * Site header. No JavaScript: on small screens the page links sit in a row
+ * under the logo (always visible, the current page underlined), so visitors
+ * can see every page from wherever they land.
+ */
 import Logo from './Logo.astro';
-import Icon from './Icon.astro';
 import { nav, url } from '../config/site';
 
 const current = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '').replace(/\/$/, '') || '/';
 const isCurrent = (href: string) => !href.includes('#') && current === href;
+const items = [{ label: 'Home', href: '/' }, ...nav];
 ---
 
-<header class="site-header" data-header>
+<header class="site-header">
   <div class="container site-header__inner">
     <Logo height={38} eager />
 
     <nav class="site-nav" aria-label="Main">
-      <div class="site-nav__panel" id="site-nav-list" data-nav-panel>
-        <ul class="site-nav__list" role="list">
-          {
-            nav.map((item) => (
-              <li>
-                <a
-                  href={url(item.href)}
-                  class="site-nav__link"
-                  aria-current={isCurrent(item.href) ? 'page' : undefined}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-      <a href={url('/contact')} class="button site-nav__cta">Contact us</a>
-      <button
-        class="site-nav__toggle"
-        type="button"
-        aria-expanded="false"
-        aria-controls="site-nav-list"
-        data-nav-toggle
-      >
-        <span class="visually-hidden">Menu</span>
-        <Icon name="menu" class="site-nav__icon-open" />
-        <Icon name="close" class="site-nav__icon-close" />
-      </button>
+      <ul class="site-nav__list" role="list">
+        {
+          items.map((item) => (
+            <li>
+              <a
+                href={url(item.href)}
+                class="site-nav__link"
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </nav>
+
+    <a href={url('/contact')} class="button site-header__cta" aria-current={isCurrent('/contact') ? 'page' : undefined}
+      >Contact us</a
+    >
   </div>
 </header>
-
-<script>
-  const header = document.querySelector<HTMLElement>('[data-header]');
-  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
-  const panel = document.querySelector<HTMLElement>('[data-nav-panel]');
-
-  const setOpen = (open: boolean) => {
-    toggle?.setAttribute('aria-expanded', String(open));
-    header?.classList.toggle('is-open', open);
-    document.documentElement.classList.toggle('nav-open', open);
-  };
-
-  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
-  panel?.addEventListener('click', (e) => {
-    if ((e.target as HTMLElement).closest('a')) setOpen(false);
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && header?.classList.contains('is-open')) {
-      setOpen(false);
-      toggle?.focus();
-    }
-  });
-  window.matchMedia('(min-width: 56em)').addEventListener('change', () => setOpen(false));
-</script>
 
 <style>
   .site-header {
@@ -78,135 +49,110 @@ const isCurrent = (href: string) => !href.includes('#') && current === href;
     border-bottom: 1px solid var(--rule);
   }
 
+  /* Small screens: logo + Contact on the first row, page links on the second. */
   .site-header__inner {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'logo cta'
+      'nav nav';
     align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    min-height: 4.75rem;
+    column-gap: 1rem;
+    padding-top: 0.75rem;
   }
-
+  .site-header__inner > :global(:first-child) {
+    grid-area: logo;
+  }
+  .site-header__cta {
+    grid-area: cta;
+    min-height: 2.5rem;
+    padding: 0.5rem 1.05rem;
+    font-size: 0.925rem;
+    white-space: nowrap;
+  }
   .site-nav {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    grid-area: nav;
+    margin-top: 0.35rem;
+    /* Scroll sideways if the links ever outgrow a very narrow screen. */
+    overflow-x: auto;
+    scrollbar-width: none;
   }
-  .site-nav__toggle {
-    display: inline-grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border: 1px solid var(--line);
-    border-radius: 50%;
-    background: #fff;
-    color: var(--ink);
-    cursor: pointer;
-  }
-  .site-nav__toggle :global(.site-nav__icon-close),
-  .site-header:global(.is-open) :global(.site-nav__icon-open) {
+  .site-nav::-webkit-scrollbar {
     display: none;
   }
-  .site-header:global(.is-open) :global(.site-nav__icon-close) {
-    display: block;
-  }
-
-  /* Mobile panel */
-  .site-nav__panel {
-    position: fixed;
-    inset: 4.75rem 0 auto 0;
-    display: grid;
-    gap: 1.5rem;
-    padding: 1.5rem var(--gutter) 2rem;
-    background: #fff;
-    border-bottom: 1px solid var(--line);
-    box-shadow: 0 24px 40px -24px rgb(11 53 88 / 0.25);
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-8px);
-    transition:
-      opacity 0.25s var(--ease),
-      transform 0.25s var(--ease),
-      visibility 0s linear 0.25s;
-  }
-  .site-header:global(.is-open) .site-nav__panel {
-    visibility: visible;
-    opacity: 1;
-    transform: none;
-    transition-delay: 0s;
+  /* On very narrow phones the last link can sit past the edge: fade it to show there is more. */
+  @media (max-width: 23.9em) {
+    .site-nav {
+      mask-image: linear-gradient(to right, #000 82%, transparent);
+      padding-right: 1.5rem;
+    }
   }
 
   .site-nav__list {
     list-style: none;
-    display: grid;
+    display: flex;
+    gap: 1.35rem;
   }
   .site-nav__link {
+    position: relative;
     display: block;
-    padding: 0.85rem 0;
-    border-bottom: 1px solid var(--line);
-    color: var(--ink);
-    font-size: var(--step-1);
+    padding: 0.6rem 0 0.7rem;
+    color: var(--text);
+    font-size: 0.975rem;
     font-weight: 500;
     text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s var(--ease);
+  }
+  .site-nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--green);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease);
+  }
+  .site-nav__link:hover,
+  .site-nav__link[aria-current='page'] {
+    color: var(--ink);
+  }
+  .site-nav__link[aria-current='page'] {
+    font-weight: 600;
+  }
+  .site-nav__link:hover::after,
+  .site-nav__link[aria-current='page']::after {
+    transform: scaleX(1);
   }
 
+  /* Wide screens: one row. */
   @media (min-width: 56em) {
-    .site-nav__toggle {
-      display: none;
+    .site-header__inner {
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: 'logo nav cta';
+      column-gap: 2.25rem;
+      min-height: 4.75rem;
+      padding-top: 0;
     }
-    .site-nav__panel {
-      position: static;
-      display: flex;
-      align-items: center;
-      gap: 2.25rem;
-      padding: 0;
-      background: none;
-      border: 0;
-      box-shadow: none;
-      visibility: visible;
-      opacity: 1;
-      transform: none;
+    .site-nav {
+      justify-self: end;
+      margin-top: 0;
+      overflow: visible;
     }
     .site-nav__list {
-      display: flex;
       gap: 2rem;
     }
     .site-nav__link {
-      position: relative;
       padding: 0.4rem 0;
-      border: 0;
-      font-size: 0.975rem;
-      color: var(--text);
-      transition: color 0.2s var(--ease);
     }
-    .site-nav__link::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 2px;
-      border-radius: 2px;
-      background: var(--green);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.3s var(--ease);
+    .site-header__cta {
+      min-height: 2.75rem;
+      padding: 0.55rem 1.15rem;
+      font-size: 0.95rem;
     }
-    .site-nav__link:hover,
-    .site-nav__link[aria-current='page'] {
-      color: var(--ink);
-    }
-    .site-nav__link:hover::after,
-    .site-nav__link[aria-current='page']::after {
-      transform: scaleX(1);
-    }
-    .site-nav {
-      gap: 2.25rem;
-    }
-  }
-  .site-nav__cta {
-    white-space: nowrap;
-    min-height: 2.75rem;
-    padding: 0.55rem 1.15rem;
-    font-size: 0.95rem;
   }
 </style>
