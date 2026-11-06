@@ -310,10 +310,11 @@ export const platformsLabel = 'Open platforms we build on and integrate with';
 export const platformsNote = 'Listed as technologies we work with. No partnership or endorsement implied.';
 
 export const stack = {
-  engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'Next.js', 'React Native', 'Astro', 'Svelte', 'Node.js', 'Go', 'Java', 'Spring Boot', 'PHP', 'Laravel', 'Rust', 'Scala', 'Clojure'],
-  dataAndGis: ['PostgreSQL', 'PostGIS', 'MongoDB', 'Elasticsearch', 'Redis', 'Kafka', 'RabbitMQ', 'pandas', 'GeoServer', 'OpenLayers'],
-  infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Keycloak', 'Google Cloud', 'AWS', 'Firebase', 'Nginx', 'GitHub Actions', 'CircleCI', 'Travis CI', 'Semaphore CI', 'Azure'],
+  engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'Next.js', 'React Native', 'Expo', 'Astro', 'Svelte', 'Node.js', 'Express.js', 'Strapi', 'Go', 'Java', 'Spring Boot', 'PHP', 'Laravel', 'Rust', 'Scala', 'Clojure', 'Lua', 'Bash'],
+  dataAndGis: ['PostgreSQL', 'PostGIS', 'MongoDB', 'Elasticsearch', 'Redis', 'Kafka', 'RabbitMQ', 'Celery', 'pandas', 'Jupyter', 'Apache ECharts', 'GeoServer', 'OpenLayers', 'Leaflet'],
+  infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Keycloak', 'Auth0', 'Google Cloud', 'AWS', 'Firebase', 'Nginx', 'GitHub Actions', 'CircleCI', 'Travis CI', 'Semaphore CI', 'Azure', 'Sentry', 'Grafana'],
   quality: ['OpenAPI (Swagger)', 'pytest', 'Jest', 'Selenium', 'Coveralls'],
+  documentation: ['Sphinx', 'DBML'],
   management: ['Notion', 'Asana', 'Zulip'],
 };
 
