@@ -65,7 +65,7 @@ import { url } from '../config/site';
         id="build-title"
         lede="Each one solves a problem we see across programmes and sectors."
       >
-        <a class="text-link" href={url('/work')}>
+        <a class="button home-more" href={url('/work')}>
           See the architecture of each <Icon name="arrow" size={18} />
         </a>
       </SectionHead>
@@ -110,7 +110,7 @@ import { url } from '../config/site';
         id="team-title"
         lede="Our leads have spent their careers on development programmes, partnerships and the technology behind them, and bring in specialists as each project needs."
       >
-        <a class="text-link" href={url('/about')}>
+        <a class="button home-more" href={url('/about')}>
           More about the team <Icon name="arrow" size={18} />
         </a>
       </SectionHead>
@@ -207,6 +207,16 @@ import { url } from '../config/site';
   }
   .pillar p {
     max-width: 34rem;
+  }
+
+  .home-more {
+    margin-top: 0.5rem;
+  }
+  .home-more :global(.icon) {
+    transition: transform 0.3s var(--ease);
+  }
+  .home-more:hover :global(.icon) {
+    transform: translateX(3px);
   }
 
   .teasers {
