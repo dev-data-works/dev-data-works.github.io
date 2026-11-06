@@ -323,7 +323,7 @@ export const aiPractice = {
   text: 'We use AI to accelerate development, testing and documentation, while keeping architecture, security, code quality and delivery decisions in the hands of experienced engineers.',
   groups: [
     { title: 'Development assistance', items: ['Claude', 'GitHub Copilot', 'Gemini'] },
-    { title: 'AI platforms and integration', items: ['OpenAI', 'Ollama', 'Hugging Face'] },
+    { title: 'AI platforms and integration', items: ['OpenAI', 'Ollama', 'Hugging Face', 'Qdrant', 'Chroma'] },
     {
       title: 'Architecture and techniques',
       items: ['Retrieval-augmented generation (RAG)', 'Model Context Protocol (MCP)', 'Vector embeddings', 'AI agents'],

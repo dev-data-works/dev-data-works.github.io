@@ -23,6 +23,11 @@ const color = icon?.hex && parseInt(icon.hex.slice(1), 16) < 0xe6e6e6 ? icon.hex
     )
   }
   {icon?.img && <img class="tool-chip__icon" src={icon.img} width="14" height="14" alt="" />}
+  {
+    icon?.svg && (
+      <svg class="tool-chip__icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false" set:html={icon.svg} />
+    )
+  }
   <span>{label}</span>
 </li>
 
