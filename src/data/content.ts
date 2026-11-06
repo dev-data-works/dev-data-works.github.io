@@ -44,23 +44,24 @@ export const patterns: Pattern[] = [
   },
   {
     slug: 'monitoring',
-    title: 'Monitoring systems with offline data collection',
-    summary: 'Collect data in the field and see it in dashboards the same week.',
+    title: 'Monitoring information systems, from forms to decisions',
+    summary: 'From working out what to measure to the dashboards that inform decisions.',
     problem:
-      'Programme data sits in paper forms and spreadsheets. It arrives late, and it cannot be checked or compared across districts.',
+      'Programme data is collected on paper and in spreadsheets, against indicators nobody agreed up front. It arrives late, cannot be checked, and rarely reaches the people who decide.',
     features: [
-      'Mobile forms that work offline and sync when a connection returns.',
-      'Review and approval steps that follow the administrative hierarchy.',
-      'Dashboards built from the collected data and shared with the right people.',
+      'We start with the needs: what to measure, which forms to use, and who reviews and approves the data.',
+      'One platform for building forms, collecting data on mobile even offline, and approval workflows from simple to multi-level.',
+      'Dashboards built in the platform, generated with AI help or embedded from BI tools, plus AI recommendations and an open API for analysis and GIS.',
+    ],
+    caption: 'How a monitoring system works, from form design to decisions.',
+    flow: [
+      "The programme team agrees what to measure and builds the forms and approval rules in the form builder.",
+      "Forms reach field staff on a mobile app that works offline; submissions sync when a connection returns.",
+      "Reviewers approve submissions through simple or multi-level approval steps.",
+      "Approved data feeds dashboards and AI insights for managers.",
+      "An open API serves the same data to analysis, GIS and BI tools.",
     ],
     stack: ['Django', 'React', 'React Native', 'PostgreSQL', 'Docker'],
-    caption: 'How field data becomes a dashboard in a monitoring system.',
-    flow: [
-      "Field staff fill in forms on a mobile app that works offline.",
-      "Submissions sync to the API when a connection returns and are stored.",
-      "Reviewers approve submissions in the approval step.",
-      "Approved data feeds the dashboards that managers use.",
-    ],
   },
   {
     slug: 'catalogue',
@@ -182,7 +183,7 @@ export const capabilities: Capability[] = [
       'Readiness and responsible-use review',
     ],
     outcome: 'Staff time returned to work that needs judgement.',
-    patterns: ['assistants'],
+    patterns: ['assistants', 'monitoring'],
   },
   {
     slug: 'advisory',

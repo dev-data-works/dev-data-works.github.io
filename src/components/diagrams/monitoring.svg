@@ -1,19 +1,25 @@
 <svg viewBox="0 0 720 312" width="720" height="312" aria-hidden="true" focusable="false">
   <defs><marker id="monitoring-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M1 1L9 5L1 9"/></marker></defs>
-  <g class="edges"><path class="e" style="--i:0" pathLength="1" marker-end="url(#monitoring-arrow)" d="M128 156H157"/>
-    <path class="e" style="--i:1" pathLength="1" marker-end="url(#monitoring-arrow)" d="M272 156H301"/>
-    <path class="e" style="--i:2" pathLength="1" marker-end="url(#monitoring-arrow)" d="M416 156H445"/>
-    <path class="e" style="--i:3" pathLength="1" marker-end="url(#monitoring-arrow)" d="M498 128V75"/>
-    <path class="e" style="--i:4" pathLength="1" marker-end="url(#monitoring-arrow)" d="M510 72V125"/>
-    <path class="e" style="--i:5" pathLength="1" marker-end="url(#monitoring-arrow)" d="M592 44H563"/>
-    <path class="e" style="--i:6" pathLength="1" marker-end="url(#monitoring-arrow)" d="M560 156H589"/>
-    <path class="e" style="--i:7" pathLength="1" marker-end="url(#monitoring-arrow)" d="M648 184V237"/></g>
-  <g class="nodes"><g class="node" style="--i:0"><rect class="n n--person" x="16" y="128" width="112" height="56" rx="28"/><text class="t" x="72" y="160.5"><tspan x="72">Field staff</tspan></text></g>
-    <g class="node" style="--i:1"><rect class="n n--app" x="160" y="128" width="112" height="56" rx="12"/><text class="t" x="216" y="153"><tspan x="216">Offline</tspan><tspan x="216" dy="15">mobile app</tspan></text></g>
-    <g class="node" style="--i:2"><rect class="n n--service" x="304" y="128" width="112" height="56" rx="3"/><text class="t" x="360" y="160.5"><tspan x="360">Sync API</tspan></text></g>
-    <g class="node" style="--i:3"><path class="n n--store" d="M448 135v42a56 7 0 0 0 112 0v-42a56 7 0 0 0 -112 0a56 7 0 0 0 112 0"/><text class="t" x="504" y="163.5"><tspan x="504">Database</tspan></text></g>
-    <g class="node" style="--i:4"><rect class="n n--service" x="448" y="16" width="112" height="56" rx="3"/><text class="t" x="504" y="48.5"><tspan x="504">Approvals</tspan></text></g>
-    <g class="node" style="--i:5"><rect class="n n--person" x="592" y="16" width="112" height="56" rx="28"/><text class="t" x="648" y="48.5"><tspan x="648">Reviewers</tspan></text></g>
-    <g class="node" style="--i:6"><rect class="n n--app" x="592" y="128" width="112" height="56" rx="12"/><text class="t" x="648" y="160.5"><tspan x="648">Dashboards</tspan></text></g>
-    <g class="node" style="--i:7"><rect class="n n--person" x="592" y="240" width="112" height="56" rx="28"/><text class="t" x="648" y="272.5"><tspan x="648">Managers</tspan></text></g></g>
+  <g class="edges"><path class="e" style="--i:0" pathLength="1" marker-end="url(#monitoring-arrow)" d="M128 44H157"/>
+    <path class="e" style="--i:1" pathLength="1" marker-end="url(#monitoring-arrow)" d="M216 72V125"/>
+    <path class="e" style="--i:2" pathLength="1" marker-end="url(#monitoring-arrow)" d="M128 156H157"/>
+    <path class="e" style="--i:3" pathLength="1" marker-end="url(#monitoring-arrow)" d="M272 156H301"/>
+    <path class="e" style="--i:4" pathLength="1" marker-end="url(#monitoring-arrow)" d="M416 156H445"/>
+    <path class="e" style="--i:5" pathLength="1" marker-end="url(#monitoring-arrow)" d="M498 128V75"/>
+    <path class="e" style="--i:6" pathLength="1" marker-end="url(#monitoring-arrow)" d="M510 72V125"/>
+    <path class="e" style="--i:7" pathLength="1" marker-end="url(#monitoring-arrow)" d="M592 44H563"/>
+    <path class="e" style="--i:8" pathLength="1" marker-end="url(#monitoring-arrow)" d="M560 156H589"/>
+    <path class="e" style="--i:9" pathLength="1" marker-end="url(#monitoring-arrow)" d="M648 184V237"/>
+    <path class="e" style="--i:10" pathLength="1" marker-end="url(#monitoring-arrow)" d="M504 184V237"/></g>
+  <g class="nodes"><g class="node" style="--i:0"><rect class="n n--person" x="16" y="16" width="112" height="56" rx="28"/><text class="t" x="72" y="41"><tspan x="72">Programme</tspan><tspan x="72" dy="15">team</tspan></text></g>
+    <g class="node" style="--i:1"><rect class="n n--app" x="160" y="16" width="112" height="56" rx="12"/><text class="t" x="216" y="48.5"><tspan x="216">Form builder</tspan></text></g>
+    <g class="node" style="--i:2"><rect class="n n--person" x="16" y="128" width="112" height="56" rx="28"/><text class="t" x="72" y="160.5"><tspan x="72">Field staff</tspan></text></g>
+    <g class="node" style="--i:3"><rect class="n n--app" x="160" y="128" width="112" height="56" rx="12"/><text class="t" x="216" y="153"><tspan x="216">Offline</tspan><tspan x="216" dy="15">mobile app</tspan></text></g>
+    <g class="node" style="--i:4"><rect class="n n--service" x="304" y="128" width="112" height="56" rx="3"/><text class="t" x="360" y="160.5"><tspan x="360">Sync API</tspan></text></g>
+    <g class="node" style="--i:5"><path class="n n--store" d="M448 135v42a56 7 0 0 0 112 0v-42a56 7 0 0 0 -112 0a56 7 0 0 0 112 0"/><text class="t" x="504" y="163.5"><tspan x="504">Database</tspan></text></g>
+    <g class="node" style="--i:6"><rect class="n n--service" x="448" y="16" width="112" height="56" rx="3"/><text class="t" x="504" y="48.5"><tspan x="504">Approvals</tspan></text></g>
+    <g class="node" style="--i:7"><rect class="n n--person" x="592" y="16" width="112" height="56" rx="28"/><text class="t" x="648" y="48.5"><tspan x="648">Reviewers</tspan></text></g>
+    <g class="node" style="--i:8"><rect class="n n--app" x="592" y="128" width="112" height="56" rx="12"/><text class="t" x="648" y="153"><tspan x="648">Dashboards</tspan><tspan x="648" dy="15">and AI insights</tspan></text></g>
+    <g class="node" style="--i:9"><rect class="n n--person" x="592" y="240" width="112" height="56" rx="28"/><text class="t" x="648" y="272.5"><tspan x="648">Managers</tspan></text></g>
+    <g class="node" style="--i:10"><rect class="n n--external" x="448" y="240" width="112" height="56" rx="3"/><text class="t" x="504" y="265"><tspan x="504">Analysis, GIS</tspan><tspan x="504" dy="15">and BI tools</tspan></text></g></g>
 </svg>
