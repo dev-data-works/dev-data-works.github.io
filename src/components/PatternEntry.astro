@@ -2,6 +2,7 @@
 import Diagram from './Diagram.astro';
 import SectionHead from './SectionHead.astro';
 import Icon from './Icon.astro';
+import ToolChip from './ToolChip.astro';
 import { appliesTo, type Pattern } from '../data/content';
 import { url } from '../config/site';
 
@@ -48,7 +49,7 @@ const titleId = `${pattern.slug}-title`;
             <h3 class="pattern__h">Built with</h3>
             <ul class="chip-list" role="list">
               {pattern.stack.map((t) => (
-                <li class="chip">{t}</li>
+                <ToolChip label={t} />
               ))}
             </ul>
           </div>

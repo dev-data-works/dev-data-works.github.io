@@ -313,7 +313,7 @@ export const stack = {
   engineering: ['Python', 'Django', 'FastAPI', 'TypeScript', 'React', 'React Native', 'Node.js', 'Go', 'Java', 'Spring Boot', 'PHP', 'Laravel'],
   dataAndGis: ['PostgreSQL', 'PostGIS', 'MongoDB', 'Elasticsearch', 'Redis', 'Kafka', 'RabbitMQ', 'pandas', 'GeoServer', 'OpenLayers', 'Vector search'],
   infrastructure: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Keycloak', 'Google Cloud', 'AWS', 'Firebase', 'Nginx', 'GitHub Actions'],
-  quality: ['OpenAPI (Swagger)', 'Automated testing (pytest, Jest, Selenium)', 'Code coverage reporting', 'Continuous integration'],
+  quality: ['OpenAPI (Swagger)', 'pytest', 'Jest', 'Selenium', 'Code coverage reporting', 'Continuous integration'],
 };
 
 /** How the team uses AI in its own work, and the AI tools and techniques it builds with. */

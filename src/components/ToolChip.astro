@@ -1,0 +1,43 @@
+---
+/**
+ * One technology chip. Shows a small monochrome brand icon when one is
+ * available (src/data/tool-icons.ts); the icon takes the brand colour on hover.
+ * Labels without an icon render as text only.
+ */
+import { toolIcons, toolIconFor } from '../data/tool-icons';
+
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+const icon = toolIconFor[label] ? toolIcons[toolIconFor[label]] : undefined;
+// Very light brand colours (white, near-white) would vanish on hover: keep them ink.
+const hoverColor = icon && parseInt(icon.hex.slice(1), 16) < 0xeeeeee ? icon.hex : 'var(--ink)';
+---
+
+<li class="chip tool-chip" style={icon ? `--brand: ${hoverColor}` : undefined}>
+  {
+    icon && (
+      <svg class="tool-chip__icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
+        <path d={icon.path} fill="currentColor" />
+      </svg>
+    )
+  }
+  <span>{label}</span>
+</li>
+
+<style>
+  .tool-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .tool-chip__icon {
+    flex: none;
+    color: var(--text-muted);
+    transition: color 0.2s var(--ease);
+  }
+  .tool-chip:hover .tool-chip__icon {
+    color: var(--brand, var(--ink));
+  }
+</style>
