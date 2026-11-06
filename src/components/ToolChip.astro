@@ -1,8 +1,7 @@
 ---
 /**
- * One technology chip. Shows a small monochrome brand icon when one is
- * available (src/data/tool-icons.ts); the icon takes the brand colour on hover.
- * Labels without an icon render as text only.
+ * One technology chip with a small brand icon in the brand's own colour
+ * (src/data/tool-icons.ts). Labels without an icon render as text only.
  */
 import { toolIcons, toolIconFor } from '../data/tool-icons';
 
@@ -11,18 +10,19 @@ interface Props {
 }
 const { label } = Astro.props;
 const icon = toolIconFor[label] ? toolIcons[toolIconFor[label]] : undefined;
-// Very light brand colours (white, near-white) would vanish on hover: keep them ink.
-const hoverColor = icon && parseInt(icon.hex.slice(1), 16) < 0xeeeeee ? icon.hex : 'var(--ink)';
+// Very light brand colours would vanish on white: draw those in ink instead.
+const color = icon?.hex && parseInt(icon.hex.slice(1), 16) < 0xe6e6e6 ? icon.hex : 'var(--ink)';
 ---
 
-<li class="chip tool-chip" style={icon ? `--brand: ${hoverColor}` : undefined}>
+<li class="chip tool-chip">
   {
-    icon && (
+    icon?.path && (
       <svg class="tool-chip__icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
-        <path d={icon.path} fill="currentColor" />
+        <path d={icon.path} fill={color} />
       </svg>
     )
   }
+  {icon?.img && <img class="tool-chip__icon" src={icon.img} width="14" height="14" alt="" />}
   <span>{label}</span>
 </li>
 
@@ -34,10 +34,6 @@ const hoverColor = icon && parseInt(icon.hex.slice(1), 16) < 0xeeeeee ? icon.hex
   }
   .tool-chip__icon {
     flex: none;
-    color: var(--text-muted);
-    transition: color 0.2s var(--ease);
-  }
-  .tool-chip:hover .tool-chip__icon {
-    color: var(--brand, var(--ink));
+    display: block;
   }
 </style>
