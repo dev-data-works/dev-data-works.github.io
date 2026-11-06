@@ -16,3 +16,4 @@ docs/designs/
 # Local checks
 .content-denylist
 .lighthouseci/
+CLAUDE.local.md
