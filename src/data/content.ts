@@ -103,26 +103,6 @@ export const patterns: Pattern[] = [
   },
 ];
 
-export interface Pillar {
-  title: string;
-  text: string;
-}
-
-export const pillars: Pillar[] = [
-  {
-    title: 'Collect',
-    text: 'Mobile forms that work without a connection and sync when one returns, with checks at the point of entry so errors are caught early.',
-  },
-  {
-    title: 'Connect',
-    text: 'Platforms and catalogues that bring together data from field teams, partners and existing systems, with clear ownership and access rules.',
-  },
-  {
-    title: 'Use',
-    text: 'Dashboards, maps, messaging and assistants that put the right information in front of programme staff, partners and communities.',
-  },
-];
-
 export interface Capability {
   slug: string;
   icon: IconName;

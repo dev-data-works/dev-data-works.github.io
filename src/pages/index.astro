@@ -8,7 +8,7 @@ import ApproachSteps from '../components/ApproachSteps.astro';
 import TeamRoles from '../components/TeamRoles.astro';
 import PartnerBand from '../components/PartnerBand.astro';
 import Icon from '../components/Icon.astro';
-import { pillars, patterns } from '../data/content';
+import { capabilities, patterns } from '../data/content';
 import { url } from '../config/site';
 ---
 
@@ -34,29 +34,36 @@ import { url } from '../config/site';
     </div>
   </section>
 
-  <section class="section" aria-labelledby="what-title">
+  <section class="section" id="expertise" aria-labelledby="what-title">
     <div class="container home-split">
       <SectionHead
         index="01"
         label="What we do"
         title="From the field to a decision."
         id="what-title"
-        lede="Most programme data starts on a phone in the field and should end in a decision. We build each step in between."
-      />
-      <ol class="pillars" role="list">
+        lede="Most programme data starts on a phone in the field and should end in a decision. We cover each step in between, from software and data platforms to maps, AI and advice."
+      >
+        <a class="button home-more" href={url('/expertise')}>
+          All expertise <Icon name="arrow" size={18} />
+        </a>
+      </SectionHead>
+      <ul class="capabilities" role="list">
         {
-          pillars.map((p) => (
-            <li class="pillar">
-              <h3>{p.title}</h3>
-              <p>{p.text}</p>
+          capabilities.map((c) => (
+            <li>
+              <a class="capability" href={url(`/expertise#${c.slug}`)}>
+                <Icon name={c.icon} size={26} class="capability__icon" />
+                <h3>{c.title}</h3>
+                <p>{c.summary}</p>
+              </a>
             </li>
           ))
         }
-      </ol>
+      </ul>
     </div>
   </section>
 
-  <section class="section section--rule" id="expertise" aria-labelledby="build-title">
+  <section class="section section--rule" aria-labelledby="build-title">
     <div class="container home-split">
       <SectionHead
         index="02"
@@ -189,24 +196,45 @@ import { url } from '../config/site';
     gap: clamp(2rem, 4vw, 3.5rem);
   }
 
-  .pillars {
+  .capabilities {
     list-style: none;
     display: grid;
+    border-top: 1px solid var(--ink);
   }
-  .pillar {
+  @media (min-width: 40em) {
+    .capabilities {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: clamp(1.5rem, 3vw, 2.5rem);
+    }
+  }
+  .capability {
     display: grid;
-    gap: 0.6rem;
-    padding-block: 1.75rem;
-    border-top: 1px solid var(--rule);
+    align-content: start;
+    gap: 0.5rem;
+    height: 100%;
+    padding-block: 1.5rem 1.75rem;
+    border-bottom: 1px solid var(--rule);
+    color: inherit;
+    text-decoration: none;
   }
-  .pillar:first-child {
-    border-top-color: var(--ink);
+  .capability :global(.capability__icon) {
+    color: var(--blue);
+    margin-bottom: 0.35rem;
+    transition: transform 0.3s var(--ease);
   }
-  .pillar h3 {
-    font-size: var(--step-3);
+  .capability h3 {
+    font-size: var(--step-1);
+    transition: color 0.25s var(--ease);
   }
-  .pillar p {
-    max-width: 34rem;
+  .capability p {
+    color: var(--text);
+    font-size: 0.975rem;
+  }
+  .capability:hover h3 {
+    color: var(--blue);
+  }
+  .capability:hover :global(.capability__icon) {
+    transform: translateY(-2px);
   }
 
   .home-more {
