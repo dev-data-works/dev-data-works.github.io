@@ -5,3 +5,10 @@ dist/
 .env.*
 .DS_Store
 .remember/
+
+# Private reminders (not published)
+docs/to-do.md
+design_draft.md
+
+# Design docs and EGM reviews stay private: they describe the team's current situation
+docs/designs/
