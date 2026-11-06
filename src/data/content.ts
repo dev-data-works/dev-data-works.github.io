@@ -14,7 +14,8 @@ export interface Pattern {
   title: string;
   summary: string;
   problem: string;
-  features: [string, string, string];
+  /** Kept short and common across the sector (see the content rule in README). */
+  features: string[];
   stack: string[];
   /** Diagram caption and the flow it shows, step by step (also the diagram's text alternative). */
   caption: string;
@@ -52,13 +53,14 @@ export const patterns: Pattern[] = [
       'We start with the needs: what to measure, which forms to use, and who reviews and approves the data.',
       'One platform for building forms, collecting data on mobile even offline, and approval workflows from simple to multi-level.',
       'Dashboards built in the platform, generated with AI help or embedded from BI tools, plus AI recommendations and an open API for analysis and GIS.',
+      'Reports exported as PDF and Excel for further analysis, and a team that helps clean and prepare the data.',
     ],
     caption: 'How a monitoring system works, from form design to decisions.',
     flow: [
       "The programme team agrees what to measure and builds the forms and approval rules in the form builder.",
       "Forms reach field staff on a mobile app that works offline; submissions sync when a connection returns.",
       "Reviewers approve submissions through simple or multi-level approval steps.",
-      "Approved data feeds dashboards and AI insights for managers.",
+      "Approved data feeds dashboards, PDF and Excel reports, and AI insights for managers.",
       "An open API serves the same data to analysis, GIS and BI tools.",
     ],
     stack: ['Django', 'React', 'React Native', 'PostgreSQL', 'Docker'],
@@ -149,9 +151,9 @@ export const capabilities: Capability[] = [
     title: 'Data analysis and visualisation',
     summary: 'Dashboards and analysis that answer the questions programme managers ask.',
     includes: [
-      'Dashboards and reporting',
+      'Dashboards, and reports exported as PDF and Excel',
       'Indicator frameworks',
-      'Data quality checks',
+      'Data cleaning and quality checks',
       'Data stories for public audiences',
     ],
     outcome: 'Decisions based on current data.',

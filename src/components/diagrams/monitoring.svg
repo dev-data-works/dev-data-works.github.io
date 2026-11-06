@@ -19,7 +19,7 @@
     <g class="node" style="--i:5"><path class="n n--store" d="M448 135v42a56 7 0 0 0 112 0v-42a56 7 0 0 0 -112 0a56 7 0 0 0 112 0"/><text class="t" x="504" y="163.5"><tspan x="504">Database</tspan></text></g>
     <g class="node" style="--i:6"><rect class="n n--service" x="448" y="16" width="112" height="56" rx="3"/><text class="t" x="504" y="48.5"><tspan x="504">Approvals</tspan></text></g>
     <g class="node" style="--i:7"><rect class="n n--person" x="592" y="16" width="112" height="56" rx="28"/><text class="t" x="648" y="48.5"><tspan x="648">Reviewers</tspan></text></g>
-    <g class="node" style="--i:8"><rect class="n n--app" x="592" y="128" width="112" height="56" rx="12"/><text class="t" x="648" y="153"><tspan x="648">Dashboards</tspan><tspan x="648" dy="15">and AI insights</tspan></text></g>
+    <g class="node" style="--i:8"><rect class="n n--app" x="592" y="128" width="112" height="56" rx="12"/><text class="t" x="648" y="153"><tspan x="648">Dashboards,</tspan><tspan x="648" dy="15">reports, AI</tspan></text></g>
     <g class="node" style="--i:9"><rect class="n n--person" x="592" y="240" width="112" height="56" rx="28"/><text class="t" x="648" y="272.5"><tspan x="648">Managers</tspan></text></g>
     <g class="node" style="--i:10"><rect class="n n--external" x="448" y="240" width="112" height="56" rx="3"/><text class="t" x="504" y="265"><tspan x="504">Analysis, GIS</tspan><tspan x="504" dy="15">and BI tools</tspan></text></g></g>
 </svg>
