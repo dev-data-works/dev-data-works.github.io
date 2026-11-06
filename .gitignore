@@ -12,3 +12,7 @@ design_draft.md
 
 # Design docs and EGM reviews stay private: they describe the team's current situation
 docs/designs/
+
+# Local checks
+.content-denylist
+.lighthouseci/

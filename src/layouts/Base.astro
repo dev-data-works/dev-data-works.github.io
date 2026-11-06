@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site, url } from '../config/site';
+import fontUrl from '@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -36,6 +37,24 @@ const jsonLd = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#0b3558" />
+    <link rel="preload" as="font" type="font/woff2" href={fontUrl} crossorigin />
+    <noscript>
+      <style>
+        [data-nav-toggle] { display: none !important; }
+        .site-header__inner { flex-wrap: wrap; }
+        [data-nav-panel] {
+          position: static !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          transform: none !important;
+          box-shadow: none !important;
+          border: 0 !important;
+          padding: 0 0 1rem !important;
+          background: none !important;
+        }
+        .site-nav { flex-wrap: wrap; }
+      </style>
+    </noscript>
 
     <link rel="icon" href={url('/favicon.ico')} sizes="48x48" />
     <link rel="icon" href={url('/icon-192.png')} type="image/png" sizes="192x192" />
