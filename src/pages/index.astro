@@ -161,14 +161,18 @@ import { url } from '../config/site';
   .hero .button-row {
     margin-top: 0.25rem;
   }
+  /* Small screens: the mark sits above the heading, aligned with the text. */
   .hero__visual {
-    max-width: 20rem;
+    order: -1;
     width: 100%;
-    margin-inline: auto;
+    max-width: 11rem;
+    margin-bottom: -1rem;
   }
   @media (min-width: 60em) {
     .hero__visual {
+      order: 0;
       max-width: none;
+      margin: 0;
     }
   }
 

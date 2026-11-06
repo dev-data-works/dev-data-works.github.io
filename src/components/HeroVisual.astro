@@ -22,15 +22,21 @@ const leafYAt = (x: number) => {
   const t = lo;
   return (1 - t) ** 3 * leafTop[0][1] + 3 * (1 - t) ** 2 * t * leafTop[1][1] + 3 * (1 - t) * t ** 2 * leafTop[2][1] + t ** 3 * leafTop[3][1];
 };
-const barWidth = 30;
-const bars = [360, 323, 286, 249, 212, 175].map((top, i) => {
-  const x = 175 + i * 44;
+// Three bars, as in the logo: wide, rising left to right, with tops that slope up to the right.
+// Positions are the logo's proportions mapped onto this 560 x 520 canvas.
+const barSpec = [
+  { x: 150, width: 76, top: 270 },
+  { x: 244, width: 76, top: 216 },
+  { x: 338, width: 70, top: 160 },
+];
+const slope = 6;
+const bars = barSpec.map(({ x, width, top }) => {
   // base tucks into the leaf, measured at the bar's right edge (where the leaf is highest)
-  const base = Math.round(leafYAt(x + barWidth) + 16);
-  return { x, top, height: base - top };
+  const base = Math.round(leafYAt(x + width) + 16);
+  return { x, width, top, base, d: `M${x} ${top + slope} L${x + width} ${top - slope} L${x + width} ${base} L${x} ${base} Z` };
 });
-const peak = { x: bars[5].x + barWidth / 2, y: bars[5].top };
-const barFill = ['#1b4d6f', '#1f587d', '#23628b', '#2a6f99', '#3a7ea8', '#4f8bb2'];
+const peak = { x: bars[2].x + bars[2].width / 2, y: bars[2].top - 2 };
+const barFill = ['#1b4d6f', '#23628b', '#3a7ea8'];
 const nodeAngles = [18, 62, 128, 166];
 const r = 240;
 const nodes = nodeAngles.map((a) => ({
@@ -84,16 +90,7 @@ const nodes = nodeAngles.map((a) => ({
     <g class="hv-bars">
       {
         bars.map((b, i) => (
-          <rect
-            class="hv-bar"
-            style={`--i:${i}`}
-            x={b.x}
-            y={b.top}
-            width={barWidth}
-            height={b.height}
-            rx="3"
-            fill={barFill[i]}
-          />
+          <path class="hv-bar" style={`--i:${i}`} d={b.d} fill={barFill[i]} />
         ))
       }
     </g>
