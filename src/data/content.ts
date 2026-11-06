@@ -17,6 +17,9 @@ export interface Pattern {
   problem: string;
   features: [string, string, string];
   stack: string[];
+  /** Diagram caption and the flow it shows, step by step (also the diagram's text alternative). */
+  caption: string;
+  flow: string[];
 }
 
 export const patterns: Pattern[] = [
@@ -33,6 +36,13 @@ export const patterns: Pattern[] = [
       'Delivery status recorded for every message, with automatic retries.',
     ],
     stack: ['Python', 'PostgreSQL', 'Redis', 'React Native', 'Messaging APIs'],
+    caption: 'How a question and a broadcast move through a messaging advisory service.',
+    flow: [
+      "People send a question on a messaging app.",
+      "The message service receives it, and staff reply from the staff app.",
+      "Broadcasts go through a task queue that retries failed messages.",
+      "Every message's delivery status is stored in the database.",
+    ],
   },
   {
     slug: 'monitoring',
@@ -47,6 +57,13 @@ export const patterns: Pattern[] = [
       'Dashboards built from the collected data and shared with the right people.',
     ],
     stack: ['Django', 'React', 'React Native', 'PostgreSQL', 'Docker'],
+    caption: 'How field data becomes a dashboard in a monitoring system.',
+    flow: [
+      "Field staff fill in forms on a mobile app that works offline.",
+      "Submissions sync to the API when a connection returns and are stored.",
+      "Reviewers approve submissions in the approval step.",
+      "Approved data feeds the dashboards that managers use.",
+    ],
   },
   {
     slug: 'catalogue',
@@ -61,6 +78,12 @@ export const patterns: Pattern[] = [
       'Harvesting that keeps records from partner catalogues up to date.',
     ],
     stack: ['CKAN', 'GeoServer', 'PostGIS', 'OpenLayers', 'Python'],
+    caption: 'How a data catalogue and map services work together.',
+    flow: [
+      "A harvester copies dataset records from partner catalogues into the CKAN catalogue.",
+      "Geospatial data is stored in PostGIS and published by GeoServer as map services.",
+      "The web map searches the catalogue and shows GeoServer layers to users.",
+    ],
   },
   {
     slug: 'assistants',
@@ -75,6 +98,13 @@ export const patterns: Pattern[] = [
       'People stay responsible for decisions. The assistant explains; it does not decide.',
     ],
     stack: ['Python', 'Vector search', 'Language model APIs', 'PostgreSQL'],
+    caption: 'How a document-grounded assistant answers a question.',
+    flow: [
+      "Your documents are indexed into a vector store.",
+      "A staff question retrieves the relevant passages from the vector store.",
+      "The language model answers from those passages only.",
+      "The answer goes back to staff with its sources.",
+    ],
   },
 ];
 
@@ -255,14 +285,16 @@ export const sectors: Sector[] = [
 export interface Platform {
   name: string;
   url: string;
-  /** File name in src/assets/platforms/ (without .svg). Missing = text wordmark. */
+  /** File name in src/assets/platforms/ (without .svg). Missing = name shown as text. */
   logo?: string;
+  /** True when the logo already contains the name (the name is then kept for screen readers only). */
+  wordmark?: boolean;
 }
 
 export const platforms: Platform[] = [
-  { name: 'CKAN', url: 'https://ckan.org' },
-  { name: 'DHIS2', url: 'https://dhis2.org' },
-  { name: 'GeoNode', url: 'https://geonode.org' },
+  { name: 'CKAN', url: 'https://ckan.org', logo: 'ckan', wordmark: true },
+  { name: 'DHIS2', url: 'https://dhis2.org', logo: 'dhis2', wordmark: true },
+  { name: 'GeoNode', url: 'https://geonode.org', logo: 'geonode' },
 ];
 
 export const platformsLabel = 'Open platforms we build on and integrate with';

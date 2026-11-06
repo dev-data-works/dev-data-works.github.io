@@ -1,0 +1,91 @@
+---
+import { team, has, mailto } from '../config/site';
+
+interface Props {
+  variant: 'summary' | 'full';
+}
+
+const { variant } = Astro.props;
+---
+
+<div class:list={['team', `team--${variant}`]}>
+  <ul class="team__list" role="list">
+    {
+      team.map((m) => (
+        <li class="member">
+          <p class="member__role">
+            {m.role}
+            {has(m.name) && <span class="member__name">{m.name}</span>}
+          </p>
+          {has(m.years) && <p class="member__years mono">{m.years} years</p>}
+          {variant === 'full' && <p class="member__summary">{m.summary}</p>}
+        </li>
+      ))
+    }
+  </ul>
+  <p class="team__cvs">
+    CVs and references are provided with proposals or on request. <a href={mailto('references')}>Request CVs and references</a>
+  </p>
+</div>
+
+<style>
+  .team {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .team__list {
+    list-style: none;
+    display: grid;
+    border-top: 1px solid var(--rule);
+  }
+  @media (min-width: 48em) {
+    .team__list {
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 0;
+    }
+  }
+  .member {
+    display: grid;
+    align-content: start;
+    gap: 0.4rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (min-width: 48em) {
+    .member {
+      padding: 1.75rem 1.75rem 1.75rem 0;
+      border-top: 1px solid var(--ink);
+      border-bottom: 0;
+    }
+    .member + .member {
+      padding-left: 1.75rem;
+      border-left: 1px solid var(--rule);
+    }
+  }
+  .member__role {
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .member__name {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .member__years {
+    font-size: 0.85rem;
+    color: var(--blue);
+  }
+  .member__summary {
+    margin-top: 0.5rem;
+    color: var(--text);
+  }
+  .team__cvs {
+    color: var(--text);
+  }
+  .team__cvs a {
+    font-weight: 600;
+  }
+</style>

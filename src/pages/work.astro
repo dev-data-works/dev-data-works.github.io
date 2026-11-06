@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PatternEntry from '../components/PatternEntry.astro';
+import SectionHead from '../components/SectionHead.astro';
+import PlatformRow from '../components/PlatformRow.astro';
+import StackList from '../components/StackList.astro';
+import PartnerBand from '../components/PartnerBand.astro';
+import { patterns, platformsLabel } from '../data/content';
+---
+
+<Base
+  title="What we build"
+  description="Four kinds of systems DevDataWorks designs and builds: messaging-based advisory services, monitoring systems with offline data collection, data catalogues and map services, and document-grounded assistants."
+>
+  <PageHeader
+    kicker="What we build"
+    title="Systems we design and build."
+    lede="Each pattern below is a kind of system our team designs and builds. For each we show the problem it solves, how it is put together, and the technology behind it. Client and project details are shared with proposals."
+  >
+    <nav class="jump" aria-label="System patterns">
+      <ul role="list">
+        {
+          patterns.map((p) => (
+            <li>
+              <a href={`#${p.slug}`}>
+                <span class="mono">{p.index}</span> {p.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </PageHeader>
+
+  <div class="container">
+    {patterns.map((p) => <PatternEntry pattern={p} variant="full" />)}
+  </div>
+
+  <section class="section section--mist" aria-labelledby="platforms-title">
+    <div class="container work-tech">
+      <SectionHead index="05" label="Platforms" title={platformsLabel} id="platforms-title" />
+      <PlatformRow />
+      <SectionHead index="06" label="Stack" title="Tools and infrastructure we use" id="stack-title" level={3} />
+      <StackList />
+    </div>
+  </section>
+
+  <div class="section-gap" aria-hidden="true"></div>
+  <PartnerBand
+    title="Want the details behind a pattern?"
+    text="Client and project details, CVs and references are shared with proposals. Ask us."
+    intents={['references', 'proposal']}
+  />
+</Base>
+
+<style>
+  .jump ul {
+    list-style: none;
+    display: grid;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+  }
+  .jump a {
+    color: var(--ink);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .jump a:hover {
+    color: var(--blue);
+    text-decoration: underline;
+  }
+  .jump .mono {
+    display: inline-block;
+    width: 2rem;
+    font-size: 0.85rem;
+    color: var(--blue);
+  }
+  .container > :global(.pattern + .pattern) {
+    border-top: 1px solid var(--rule);
+  }
+  .work-tech {
+    display: grid;
+    gap: 2rem;
+  }
+  .work-tech > :global(.section-head-x:not(:first-child)) {
+    margin-top: 2.5rem;
+  }
+  .section-gap {
+    height: var(--section);
+  }
+</style>

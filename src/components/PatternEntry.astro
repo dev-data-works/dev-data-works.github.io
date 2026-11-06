@@ -1,0 +1,201 @@
+---
+import Diagram from './Diagram.astro';
+import SectionHead from './SectionHead.astro';
+import Icon from './Icon.astro';
+import { appliesTo, type Pattern } from '../data/content';
+import { url } from '../config/site';
+
+interface Props {
+  pattern: Pattern;
+  variant: 'full' | 'teaser';
+}
+
+const { pattern, variant } = Astro.props;
+const related = appliesTo(pattern.slug);
+const titleId = `${pattern.slug}-title`;
+---
+
+{
+  variant === 'teaser' ? (
+    <li class="teaser">
+      <a href={url(`/work#${pattern.slug}`)} class="teaser__link">
+        <span class="teaser__index mono" aria-hidden="true">
+          {pattern.index}
+        </span>
+        <span class="teaser__body">
+          <span class="teaser__title">{pattern.title}</span>
+          <span class="teaser__summary">{pattern.summary}</span>
+        </span>
+        <Icon name="arrow" size={20} class="teaser__arrow" />
+      </a>
+    </li>
+  ) : (
+    <article class="pattern" id={pattern.slug} aria-labelledby={titleId}>
+      <SectionHead index={pattern.index} label="System pattern" title={pattern.title} id={titleId} lede={pattern.summary} />
+
+      <div class="pattern__grid">
+        <div class="pattern__text">
+          <div>
+            <h3 class="pattern__h">The problem</h3>
+            <p>{pattern.problem}</p>
+          </div>
+          <div>
+            <h3 class="pattern__h">What it does</h3>
+            <ul class="pattern__features" role="list">
+              {pattern.features.map((f) => (
+                <li>{f}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 class="pattern__h">Built with</h3>
+            <ul class="chip-list" role="list">
+              {pattern.stack.map((t) => (
+                <li class="chip">{t}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <Diagram pattern={pattern} />
+      </div>
+
+      <dl class="pattern__applies">
+        <div>
+          <dt>Expertise</dt>
+          <dd>
+            {related.capabilities.map((c, i) => (
+              <>
+                {i > 0 && ', '}
+                <a href={url(`/expertise#${c.slug}`)}>{c.title}</a>
+              </>
+            ))}
+          </dd>
+        </div>
+        <div>
+          <dt>Sectors</dt>
+          <dd>
+            {related.sectors.map((s, i) => (
+              <>
+                {i > 0 && ', '}
+                <a href={url(`/sectors#${s.slug}`)}>{s.title}</a>
+              </>
+            ))}
+          </dd>
+        </div>
+      </dl>
+    </article>
+  )
+}
+
+<style>
+  /* Teaser (home page) */
+  .teaser__link {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+    color: inherit;
+    text-decoration: none;
+  }
+  .teaser__index {
+    font-size: 0.85rem;
+    color: var(--blue);
+  }
+  .teaser__body {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .teaser__title {
+    font-size: var(--step-2);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    transition: color 0.25s var(--ease);
+  }
+  .teaser__summary {
+    color: var(--text-muted);
+  }
+  .teaser__link :global(.teaser__arrow) {
+    align-self: center;
+    color: var(--blue);
+    transition: transform 0.3s var(--ease);
+  }
+  .teaser__link:hover .teaser__title {
+    color: var(--blue);
+  }
+  .teaser__link:hover :global(.teaser__arrow) {
+    transform: translateX(4px);
+  }
+
+  /* Full entry (/work) */
+  .pattern {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    padding-block: clamp(3rem, 6vw, 5rem);
+    scroll-margin-top: 5rem;
+  }
+  .pattern + :global(.pattern) {
+    border-top: 0;
+  }
+  .pattern__grid {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+  @media (min-width: 64em) {
+    .pattern__grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: start;
+    }
+  }
+  .pattern__text {
+    display: grid;
+    gap: 1.75rem;
+    max-width: var(--measure);
+  }
+  .pattern__h {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+  .pattern__features {
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .pattern__features li {
+    position: relative;
+    padding-left: 1.25rem;
+  }
+  .pattern__features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 0.5rem;
+    height: 1.5px;
+    background: var(--blue);
+  }
+  .pattern__applies {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .pattern__applies div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.6rem;
+  }
+  .pattern__applies dt {
+    min-width: 5.5rem;
+    color: var(--text-muted);
+  }
+  .pattern__applies dd {
+    margin: 0;
+  }
+</style>

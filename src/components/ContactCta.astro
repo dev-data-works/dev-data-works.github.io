@@ -69,7 +69,7 @@ const placeholder = contact.emailIsPlaceholder ? '' : undefined;
   }
   .cta__address {
     justify-self: start;
-    font-size: var(--step-3);
+    font-size: clamp(1.3rem, 0.85rem + 2.4vw, 2.25rem);
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.15;
@@ -77,8 +77,7 @@ const placeholder = contact.emailIsPlaceholder ? '' : undefined;
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.18em;
-    overflow-wrap: anywhere;
-    user-select: all;
+    overflow-wrap: break-word;
   }
   .cta__address:hover {
     color: var(--blue);
