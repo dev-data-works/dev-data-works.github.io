@@ -59,19 +59,19 @@ export const team: TeamMember[] = [
     role: 'Executive lead',
     years: 20,
     summary:
-      'Experience as a global team lead, principal solution manager and technical adviser in international development, specialising in technology for development, data platforms and water, sanitation and hygiene (WASH) programmes. Earlier enterprise technology experience at a global IT company. Leads strategy and delivery.',
+      "Experience as global team lead, principal solution manager and technical adviser in international development, specialising in technology for development, data platforms and water, sanitation and hygiene (WASH) programmes. Earlier enterprise technology work at a global IT company. Leads strategy and delivery.",
   },
   {
     role: 'Technical lead',
     years: 15,
     summary:
-      'Software and data systems for international development. Designs the architecture of every system we build and leads the engineering team.',
+      "Builds practical, maintainable data platforms for development and humanitarian partners. As lead developer with technology-lead responsibilities, has owned architecture, DevOps and engineering practice across 20+ delivered systems, from monitoring information systems to data catalogues and AI assistants. Leads our engineering team.",
   },
   {
     role: 'Partnerships lead',
     years: 20,
     summary:
-      "Builds and maintains partnerships with donors, NGOs and governments around the world. Holds a master's degree in Media Studies and Broadcast Journalism, and follows how events and public debate shape development work.",
+      "Builds and maintains a wide network of partnerships with donors, NGOs and governments around the world. Holds a master's degree in Media Studies and Broadcast Journalism, and follows how events and public debate shape development work. Leads business development and partner relations.",
   },
 ];
 
