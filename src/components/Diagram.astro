@@ -10,10 +10,11 @@
  * else the drawing is complete from the start.
  */
 import type { Pattern } from '../data/content';
-import messaging from './diagrams/messaging.svg?raw';
 import monitoring from './diagrams/monitoring.svg?raw';
 import catalogue from './diagrams/catalogue.svg?raw';
 import assistants from './diagrams/assistants.svg?raw';
+import earlyWarning from './diagrams/early-warning.svg?raw';
+import knowledge from './diagrams/knowledge.svg?raw';
 
 interface Props {
   pattern: Pattern;
@@ -21,7 +22,7 @@ interface Props {
   flow?: boolean;
 }
 
-const svgs = { messaging, monitoring, catalogue, assistants } as const;
+const svgs = { monitoring, 'early-warning': earlyWarning, catalogue, knowledge, assistants } as const;
 const { pattern, flow = true } = Astro.props;
 const captionId = `${pattern.slug}-diagram-caption`;
 ---

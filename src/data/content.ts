@@ -7,7 +7,7 @@ import type { IconName } from '../components/icons';
  * project.
  */
 
-export type PatternSlug = 'messaging' | 'monitoring' | 'catalogue' | 'assistants';
+export type PatternSlug = 'monitoring' | 'early-warning' | 'catalogue' | 'knowledge' | 'assistants';
 
 export interface Pattern {
   slug: PatternSlug;
@@ -23,26 +23,6 @@ export interface Pattern {
 }
 
 export const patterns: Pattern[] = [
-  {
-    slug: 'messaging',
-    title: 'Messaging-based advisory services',
-    summary: 'Reach people on the messaging apps they already use.',
-    problem:
-      'Advice and alerts reach farmers, health workers or community members late, or not at all, when they depend on visits, radio or apps that people do not install.',
-    features: [
-      'Two-way conversations on common messaging apps, with questions routed to staff.',
-      'Broadcasts to groups selected by location or profile.',
-      'Delivery status recorded for every message, with automatic retries.',
-    ],
-    stack: ['Python', 'PostgreSQL', 'Redis', 'React Native', 'Messaging APIs'],
-    caption: 'How a question and a broadcast move through a messaging advisory service.',
-    flow: [
-      "People send a question on a messaging app.",
-      "The message service receives it, and staff reply from the staff app.",
-      "Broadcasts go through a task queue that retries failed messages.",
-      "Every message's delivery status is stored in the database.",
-    ],
-  },
   {
     slug: 'monitoring',
     title: 'Monitoring information systems, from forms to decisions',
@@ -64,6 +44,28 @@ export const patterns: Pattern[] = [
       "An open API serves the same data to analysis, GIS and BI tools.",
     ],
     stack: ['Django', 'React', 'React Native', 'PostgreSQL', 'Docker'],
+  },
+  {
+    slug: 'early-warning',
+    title: 'Drought and climate early warning systems',
+    summary: 'Satellite data turned into monthly, expert-validated warnings, and into plans for who to help first.',
+    problem:
+      'Drought builds slowly and is easy to miss until crops and livestock are already lost. The satellite data that could show it early is scattered across sources, hard to process, and rarely connected to decisions about who needs support.',
+    features: [
+      'Automated monthly processing of satellite and climate data (rainfall, vegetation, evaporative stress and soil moisture) into a combined drought indicator map.',
+      'Expert review and validation before each map is published, with a full history of published months.',
+      'Exposure, vulnerability and eligibility layers (population, livestock, cropland, water points, food security) to plan anticipatory and response activities.',
+      'Maps and data published on GeoNode, so partners can view, download and reuse them.',
+    ],
+    caption: 'How satellite data becomes a validated drought warning and a response plan.',
+    flow: [
+      'Each month, a scheduled job downloads rainfall, vegetation, evaporative stress and soil moisture data.',
+      'The data is combined into a single drought indicator map and stored in GeoNode.',
+      'Expert reviewers check and validate the map before it is published.',
+      'The published map is combined with exposure, vulnerability and eligibility data.',
+      'Decision-makers use the result to plan anticipatory and response activities.',
+    ],
+    stack: ['Python', 'Django', 'GeoNode', 'GeoServer', 'PostGIS', 'Remote sensing (CHIRPS, NDVI, LST)', 'Scheduled jobs'],
   },
   {
     slug: 'catalogue',
@@ -88,6 +90,27 @@ export const patterns: Pattern[] = [
     stack: ['CKAN', 'GeoServer', 'PostGIS', 'OpenLayers', 'Keycloak', 'OGC services (WMS, WFS, WCS)', 'Python'],
   },
   {
+    slug: 'knowledge',
+    title: 'Knowledge and partnership platforms',
+    summary: "A shared home for a network's resources, experts and partners, in several languages.",
+    problem:
+      'Global partnerships produce policies, tools, case studies and data across many organisations and languages. Without one place to find them, and the people behind them, work is duplicated and good practice does not travel.',
+    features: [
+      'A searchable library of policies, tools, projects and data, managed by editors in a headless CMS and published in several languages.',
+      'Profiles for organisations and experts, so members can find and contact each other, with maps of who works where.',
+      'Single sign-on with role-based access, and records pulled in from external databases through their APIs.',
+      'AI-assisted tagging and recommendations that point each member to relevant resources and people.',
+    ],
+    caption: 'How a knowledge platform connects resources, people and partners.',
+    flow: [
+      'Editors publish resources and news in the headless CMS, in several languages.',
+      'External databases feed policies and records in through their APIs.',
+      'Members sign in once, manage their organisation and expert profiles, and search the library and map.',
+      'AI tagging and recommendations, built on the shared database, point members to relevant resources and people.',
+    ],
+    stack: ['Next.js', 'React', 'Headless CMS', 'PostgreSQL', 'OpenID Connect', 'Kubernetes'],
+  },
+  {
     slug: 'assistants',
     title: 'Knowledge assistants grounded in your own documents',
     summary: 'Answers from your own documents, with sources, wherever people already ask.',
@@ -95,7 +118,7 @@ export const patterns: Pattern[] = [
       'Staff and communities lose time searching manuals, guidelines and reports. General chatbots give confident answers that are not based on your material, and sending programme data to a public chatbot is often not an option.',
     features: [
       'Knowledge bases you manage yourself: add documents through an ingestion pipeline, keep them current, and let the assistant pick the right knowledge base for each question.',
-      'Answers with their sources, delivered in a chat widget on any website, inside your own apps, over messaging apps, or through an API.',
+      'Answers with their sources, delivered in a chat widget on any website, inside your own apps, over messaging apps (including broadcasts to selected groups, with delivery tracking), or through an API.',
       'Can run fully on your own servers with a choice of language models, local or hosted, so sensitive data stays with you.',
       'Answer quality measured with standard evaluation metrics, and prompts versioned centrally so the assistant improves over time.',
     ],
@@ -134,7 +157,7 @@ export const capabilities: Capability[] = [
       'Documentation, training and handover',
     ],
     outcome: 'Software your team can run and change after we leave.',
-    patterns: ['messaging', 'monitoring'],
+    patterns: ['monitoring', 'knowledge'],
   },
   {
     slug: 'data-platforms',
@@ -148,7 +171,7 @@ export const capabilities: Capability[] = [
       'Access control and data protection',
     ],
     outcome: 'One trusted place for programme data.',
-    patterns: ['monitoring', 'catalogue'],
+    patterns: ['monitoring', 'catalogue', 'knowledge'],
   },
   {
     slug: 'analytics',
@@ -162,7 +185,7 @@ export const capabilities: Capability[] = [
       'Data stories for public audiences',
     ],
     outcome: 'Decisions based on current data.',
-    patterns: ['monitoring'],
+    patterns: ['monitoring', 'early-warning'],
   },
   {
     slug: 'gis',
@@ -176,7 +199,7 @@ export const capabilities: Capability[] = [
       'Geospatial data management',
     ],
     outcome: 'Resources directed to where they are needed.',
-    patterns: ['catalogue'],
+    patterns: ['catalogue', 'early-warning'],
   },
   {
     slug: 'ai',
@@ -190,7 +213,7 @@ export const capabilities: Capability[] = [
       'Readiness and responsible-use review',
     ],
     outcome: 'Staff time returned to work that needs judgement.',
-    patterns: ['assistants', 'monitoring'],
+    patterns: ['assistants', 'monitoring', 'knowledge'],
   },
   {
     slug: 'advisory',
@@ -224,8 +247,8 @@ export const sectors: Sector[] = [
     slug: 'agriculture',
     icon: 'leaf',
     title: 'Agriculture and food systems',
-    application: 'Advisory messaging and knowledge assistants for producers, farmer registries and field monitoring.',
-    patterns: ['messaging', 'assistants', 'monitoring'],
+    application: 'Drought early warning, knowledge assistants for producers, farmer registries and field monitoring.',
+    patterns: ['early-warning', 'assistants', 'monitoring'],
   },
   {
     slug: 'wash',
@@ -245,8 +268,8 @@ export const sectors: Sector[] = [
     slug: 'climate',
     icon: 'globe',
     title: 'Climate and environment',
-    application: 'Shared catalogues of environmental data, and risk and land-use maps.',
-    patterns: ['catalogue'],
+    application: 'Drought and climate early warning, shared catalogues of environmental data, and risk and land-use maps.',
+    patterns: ['early-warning', 'catalogue'],
   },
   {
     slug: 'education',
@@ -259,8 +282,8 @@ export const sectors: Sector[] = [
     slug: 'governance',
     icon: 'columns',
     title: 'Governance and public services',
-    application: 'Open data portals and monitoring of public programmes.',
-    patterns: ['catalogue', 'monitoring'],
+    application: 'Open data portals, knowledge platforms for partnerships, and monitoring of public programmes.',
+    patterns: ['catalogue', 'knowledge', 'monitoring'],
   },
 ];
 

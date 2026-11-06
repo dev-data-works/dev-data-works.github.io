@@ -1,0 +1,20 @@
+<svg viewBox="0 0 720 312" width="720" height="312" aria-hidden="true" focusable="false">
+  <defs><marker id="early-warning-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M1 1L9 5L1 9"/></marker></defs>
+  <g class="edges"><path class="e" style="--i:0" pathLength="1" marker-end="url(#early-warning-arrow)" d="M128 44H157"/>
+    <path class="e" style="--i:1" pathLength="1" marker-end="url(#early-warning-arrow)" d="M272 44H301"/>
+    <path class="e" style="--i:2" pathLength="1" marker-end="url(#early-warning-arrow)" d="M360 72V125"/>
+    <path class="e" style="--i:3" pathLength="1" marker-end="url(#early-warning-arrow)" d="M272 156H301"/>
+    <path class="e" style="--i:4" pathLength="1" marker-end="url(#early-warning-arrow)" d="M416 156H445"/>
+    <path class="e" style="--i:5" pathLength="1" marker-end="url(#early-warning-arrow)" d="M504 72V125"/>
+    <path class="e" style="--i:6" pathLength="1" marker-end="url(#early-warning-arrow)" d="M560 156H589"/>
+    <path class="e" style="--i:7" pathLength="1" marker-end="url(#early-warning-arrow)" d="M648 184V237"/></g>
+  <g class="nodes"><g class="node" style="--i:0"><rect class="n n--external" x="16" y="16" width="112" height="56" rx="3"/><text class="t" x="72" y="41"><tspan x="72">Satellite and</tspan><tspan x="72" dy="15">climate data</tspan></text></g>
+    <g class="node" style="--i:1"><rect class="n n--service" x="160" y="16" width="112" height="56" rx="3"/><text class="t" x="216" y="41"><tspan x="216">Monthly</tspan><tspan x="216" dy="15">processing job</tspan></text></g>
+    <g class="node" style="--i:2"><path class="n n--store" d="M304 23v42a56 7 0 0 0 112 0v-42a56 7 0 0 0 -112 0a56 7 0 0 0 112 0"/><text class="t" x="360" y="51.5"><tspan x="360">GeoNode</tspan></text></g>
+    <g class="node" style="--i:3"><path class="n n--store" d="M448 23v42a56 7 0 0 0 112 0v-42a56 7 0 0 0 -112 0a56 7 0 0 0 112 0"/><text class="t" x="504" y="44"><tspan x="504">Exposure,</tspan><tspan x="504" dy="15">eligibility</tspan></text></g>
+    <g class="node" style="--i:4"><rect class="n n--person" x="160" y="128" width="112" height="56" rx="28"/><text class="t" x="216" y="153"><tspan x="216">Expert</tspan><tspan x="216" dy="15">reviewers</tspan></text></g>
+    <g class="node" style="--i:5"><rect class="n n--service" x="304" y="128" width="112" height="56" rx="3"/><text class="t" x="360" y="153"><tspan x="360">Review and</tspan><tspan x="360" dy="15">validation</tspan></text></g>
+    <g class="node" style="--i:6"><rect class="n n--app" x="448" y="128" width="112" height="56" rx="12"/><text class="t" x="504" y="153"><tspan x="504">Published</tspan><tspan x="504" dy="15">drought maps</tspan></text></g>
+    <g class="node" style="--i:7"><rect class="n n--person" x="592" y="128" width="112" height="56" rx="28"/><text class="t" x="648" y="153"><tspan x="648">Decision-</tspan><tspan x="648" dy="15">makers</tspan></text></g>
+    <g class="node" style="--i:8"><rect class="n n--service" x="592" y="240" width="112" height="56" rx="3"/><text class="t" x="648" y="265"><tspan x="648">Response</tspan><tspan x="648" dy="15">planning</tspan></text></g></g>
+</svg>
