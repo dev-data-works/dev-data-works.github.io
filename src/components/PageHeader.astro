@@ -2,17 +2,22 @@
 import ArcMotif from './ArcMotif.astro';
 
 interface Props {
+  /** Two-digit section number shown in the rule, e.g. "01". */
+  index?: string;
   kicker: string;
   title: string;
   lede: string;
 }
-const { kicker, title, lede } = Astro.props;
+const { index, kicker, title, lede } = Astro.props;
 ---
 
 <section class="page-header">
   <ArcMotif class="page-header__motif" />
   <div class="container page-header__inner">
-    <p class="kicker">{kicker}</p>
+    <p class="section-index">
+      {index && <span class="section-index__num">{index}</span>}
+      <span>{kicker}</span>
+    </p>
     <h1>{title}</h1>
     <p class="lede">{lede}</p>
     <slot />
@@ -24,9 +29,8 @@ const { kicker, title, lede } = Astro.props;
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    padding-block: clamp(4rem, 9vw, 8rem) clamp(3.5rem, 7vw, 6rem);
-    border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, #fff 0%, var(--mist) 100%);
+    padding-block: clamp(3.5rem, 8vw, 7rem) clamp(3rem, 6vw, 5rem);
+    border-bottom: 1px solid var(--rule);
   }
   :global(.page-header__motif) {
     position: absolute;
@@ -35,11 +39,12 @@ const { kicker, title, lede } = Astro.props;
     right: clamp(-16rem, -10vw, -6rem);
     top: 50%;
     transform: translateY(-46%);
+    opacity: 0.35;
   }
   @media (max-width: 48em) {
     :global(.page-header__motif) {
       right: -15rem;
-      opacity: 0.55;
+      opacity: 0.25;
     }
   }
   .page-header__inner {
@@ -47,8 +52,13 @@ const { kicker, title, lede } = Astro.props;
     gap: 1.5rem;
     justify-items: start;
   }
+  .page-header__inner > .section-index {
+    width: 100%;
+    max-width: 40rem;
+  }
   h1 {
-    max-width: 18ch;
-    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.25rem);
+    max-width: 16ch;
+    font-size: var(--step-6);
+    line-height: 1;
   }
 </style>

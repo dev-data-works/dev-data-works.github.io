@@ -1,0 +1,191 @@
+---
+/**
+ * Architecture diagram for a system pattern.
+ * The SVG files in ./diagrams/ are static, hand-checked drawings (one shared
+ * drawing spec). The SVG is decorative for assistive tech; the caption and the
+ * numbered flow below it carry the meaning in text.
+ *
+ * Motion: lines draw and nodes appear as the figure scrolls into view, only
+ * where scroll-driven animation is supported and motion is welcome. Everywhere
+ * else the drawing is complete from the start.
+ */
+import type { Pattern } from '../data/content';
+import monitoring from './diagrams/monitoring.svg?raw';
+import catalogue from './diagrams/catalogue.svg?raw';
+import assistants from './diagrams/assistants.svg?raw';
+import earlyWarning from './diagrams/early-warning.svg?raw';
+import knowledge from './diagrams/knowledge.svg?raw';
+
+interface Props {
+  pattern: Pattern;
+  /** Show the numbered flow under the drawing (default true). */
+  flow?: boolean;
+}
+
+const svgs = { monitoring, 'early-warning': earlyWarning, catalogue, knowledge, assistants } as const;
+const { pattern, flow = true } = Astro.props;
+const captionId = `${pattern.slug}-diagram-caption`;
+---
+
+<figure class="diagram" aria-labelledby={captionId}>
+  <div
+    class="diagram__canvas"
+    tabindex="0"
+    role="region"
+    aria-label={`${pattern.title} diagram (scrolls sideways on small screens)`}
+    set:html={svgs[pattern.slug]}
+  />
+  <p class="diagram__hint" aria-hidden="true">Swipe sideways to see the whole diagram.</p>
+  <figcaption id={captionId} class="diagram__caption">{pattern.caption}</figcaption>
+  {
+    flow && (
+      <ol class="diagram__flow" role="list">
+        {pattern.flow.map((step) => (
+          <li>{step}</li>
+        ))}
+      </ol>
+    )
+  }
+</figure>
+
+<style>
+  .diagram {
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .diagram__canvas {
+    overflow-x: auto;
+    padding-block: 0.5rem;
+    border-block: 1px solid var(--rule);
+    scrollbar-width: thin;
+  }
+  .diagram__canvas :global(svg) {
+    display: block;
+    width: 100%;
+    min-width: 36rem;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Drawing spec: systems in ink line, people in leaf green. */
+  .diagram__canvas :global(.n) {
+    fill: #fff;
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .diagram__canvas :global(.n--external) {
+    stroke-dasharray: 5 4;
+    stroke: var(--text-muted);
+  }
+  .diagram__canvas :global(.n--person) {
+    fill: var(--green-soft);
+    stroke: var(--green-ink);
+  }
+  .diagram__canvas :global(.n--store) {
+    fill: var(--blue-soft);
+  }
+  .diagram__canvas :global(.t) {
+    fill: var(--ink);
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    text-anchor: middle;
+  }
+  .diagram__canvas :global(.node:has(.n--person) .t) {
+    fill: var(--green-ink);
+    font-weight: 600;
+  }
+  .diagram__canvas :global(.e) {
+    fill: none;
+    stroke: var(--blue);
+    stroke-width: 1.5;
+  }
+  .diagram__canvas :global(.arrowhead) {
+    fill: none;
+    stroke: var(--blue);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .diagram__hint {
+    display: none;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  @media (max-width: 40em) {
+    .diagram__canvas {
+      mask-image: linear-gradient(to right, #000 80%, transparent);
+    }
+    .diagram__hint {
+      display: block;
+    }
+  }
+  .diagram__caption {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+  }
+
+  .diagram__flow {
+    list-style: none;
+    counter-reset: flow;
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  .diagram__flow li {
+    counter-increment: flow;
+    display: grid;
+    grid-template-columns: 1.75rem 1fr;
+    color: var(--text);
+  }
+  .diagram__flow li::before {
+    content: counter(flow);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.9;
+    color: var(--blue);
+  }
+
+  /* Line-draw: only where supported and wanted. Fail-open everywhere else. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .diagram__canvas :global(.e) {
+        stroke-dasharray: 1;
+        animation: diagram-draw linear both;
+        animation-timeline: view();
+        animation-range: entry calc(10% + var(--i) * 6%) cover calc(35% + var(--i) * 4%);
+        animation-timing-function: var(--ease-draw);
+      }
+      .diagram__canvas :global(.node) {
+        animation: diagram-node linear both;
+        animation-timeline: view();
+        animation-range: entry calc(var(--i) * 6%) cover 30%;
+      }
+    }
+  }
+
+  @keyframes diagram-draw {
+    from {
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+  }
+  @keyframes diagram-node {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>

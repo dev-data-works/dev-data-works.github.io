@@ -1,0 +1,82 @@
+---
+/**
+ * Open platforms the team works with. Logos are official files in their own
+ * colours (see src/assets/platforms/SOURCES.md), inlined at build time.
+ */
+import { platforms, platformsNote } from '../data/content';
+
+const logos = import.meta.glob<string>('../assets/platforms/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+const logoFor = (name?: string) => (name ? logos[`../assets/platforms/${name}.svg`] : undefined);
+---
+
+<div class="platforms">
+  <ul class="platforms__list" role="list">
+    {
+      platforms.map((p) => {
+        const svg = logoFor(p.logo);
+        return (
+          <li>
+            <a href={p.url} rel="noopener" class:list={['platform', { 'platform--text': !svg }]}>
+              {svg && <span class="platform__logo" aria-hidden="true" set:html={svg} />}
+              <span class:list={['platform__name', { 'visually-hidden': svg && p.wordmark }]}>{p.name}</span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+  <p class="platforms__note">{platformsNote}</p>
+</div>
+
+<style>
+  .platforms {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .platforms__list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border-block: 1px solid var(--rule);
+  }
+  .platforms__list li {
+    flex: 1 1 10rem;
+  }
+  .platform {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    height: 6rem;
+    padding: 1rem 1.5rem;
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    filter: saturate(0.85);
+    transition: filter 0.3s var(--ease), background-color 0.3s var(--ease);
+  }
+  .platform:hover,
+  .platform:focus-visible {
+    filter: none;
+    background: var(--mist);
+  }
+  .platform__logo {
+    display: block;
+    height: 2.25rem;
+  }
+  .platform__logo :global(svg) {
+    height: 100%;
+    width: auto;
+  }
+  .platforms__note {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+</style>

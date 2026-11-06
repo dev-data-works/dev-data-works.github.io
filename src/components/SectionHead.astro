@@ -1,0 +1,48 @@
+---
+/**
+ * Section opening: numbered hairline rule, heading and optional lede.
+ * The reveal (data-reveal) sits on this header only: one per section.
+ */
+interface Props {
+  /** Two-digit number for sequenced sections; omit when the content is not a sequence. */
+  index?: string;
+  label: string;
+  title: string;
+  /** id for the heading element (use with aria-labelledby on the section). */
+  id?: string;
+  lede?: string;
+  level?: 2 | 3;
+  class?: string;
+}
+
+const { index, label, title, id, lede, level = 2, class: className } = Astro.props;
+const Heading = level === 2 ? 'h2' : 'h3';
+---
+
+<header class:list={['section-head-x', className]} data-reveal>
+  <p class="section-index">
+    {index && <span class="section-index__num">{index}</span>}
+    <span>{label}</span>
+  </p>
+  <Heading id={id}>{title}</Heading>
+  {lede && <p class="lede">{lede}</p>}
+  <slot />
+</header>
+
+<style>
+  .section-head-x {
+    display: grid;
+    gap: 1.1rem;
+    justify-items: start;
+  }
+  .section-head-x > .section-index {
+    width: 100%;
+  }
+  h2,
+  h3 {
+    max-width: 22ch;
+  }
+  h3 {
+    font-size: var(--step-3);
+  }
+</style>

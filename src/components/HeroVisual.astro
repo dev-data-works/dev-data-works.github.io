@@ -1,118 +1,53 @@
 ---
-// Abstract composition derived from the logo symbol: an orbit arc, rising data bars,
-// and the leaf as the ground they grow from. Animated once on load (CSS only).
+/**
+ * Hero illustration: the DevDataWorks mark (traced from the logo, see
+ * src/assets/logo-mark.svg) centred on a round field of data points that
+ * shares the logo circle's centre. Animated once on load (CSS
+ * only): the field settles, the arc sweeps in, the bars rise one by one, the
+ * leaf grounds them. Nothing animates under reduced motion.
+ */
+import markRaw from '../assets/logo-mark.svg?raw';
+
+// Place the mark (viewBox 250 250 760 700) so the logo circle's centre
+// (640, 637 in logo units, fitted to the arc) lands exactly on the canvas centre (280, 260).
 const center = { x: 280, y: 260 };
-// Bars sit on the leaf: their bases follow the leaf's upper edge (a cubic bezier).
-const leafTop = [
-  [96, 470],
-  [190, 405],
-  [300, 362],
-  [478, 316],
-];
-const leafYAt = (x: number) => {
-  let lo = 0,
-    hi = 1;
-  const bx = (t: number) =>
-    (1 - t) ** 3 * leafTop[0][0] + 3 * (1 - t) ** 2 * t * leafTop[1][0] + 3 * (1 - t) * t ** 2 * leafTop[2][0] + t ** 3 * leafTop[3][0];
-  for (let i = 0; i < 30; i++) {
-    const mid = (lo + hi) / 2;
-    if (bx(mid) < x) lo = mid;
-    else hi = mid;
-  }
-  const t = lo;
-  return (1 - t) ** 3 * leafTop[0][1] + 3 * (1 - t) ** 2 * t * leafTop[1][1] + 3 * (1 - t) * t ** 2 * leafTop[2][1] + t ** 3 * leafTop[3][1];
-};
-const barWidth = 30;
-const bars = [360, 323, 286, 249, 212, 175].map((top, i) => {
-  const x = 175 + i * 44;
-  // base tucks into the leaf, measured at the bar's right edge (where the leaf is highest)
-  const base = Math.round(leafYAt(x + barWidth) + 16);
-  return { x, top, height: base - top };
-});
-const peak = { x: bars[5].x + barWidth / 2, y: bars[5].top };
-const barFill = ['#1b4d6f', '#1f587d', '#23628b', '#2a6f99', '#3a7ea8', '#4f8bb2'];
-const nodeAngles = [18, 62, 128, 166];
-const r = 240;
-const nodes = nodeAngles.map((a) => ({
-  x: +(center.x + r * Math.cos((a * Math.PI) / 180)).toFixed(1),
-  y: +(center.y - r * Math.sin((a * Math.PI) / 180)).toFixed(1),
-}));
+const width = 420;
+const scale = width / 760;
+const mark = { x: +(center.x - (640 - 250) * scale).toFixed(2), y: +(center.y - (637 - 250) * scale).toFixed(2), width };
+const height = Math.round(700 * scale);
+
+// The logo's circle radius on the canvas; the dot field extends a little beyond it.
+const ringR = 378 * scale; // outer edge of the arc
+const markSvg = markRaw
+  .replace(' role="img" aria-label="DevDataWorks"', '')
+  .replace('<svg ', `<svg class="hv-mark" x="${mark.x}" y="${mark.y}" width="${mark.width}" height="${height}" `);
+
+const outerR = ringR + 34;
 ---
 
 <div class="hero-visual" aria-hidden="true">
   <svg viewBox="0 0 560 520" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <pattern id="hv-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <!-- offset so one dot sits exactly on the centre and the grid is symmetric around it -->
+      <pattern id="hv-dots" x="18" y="18" width="20" height="20" patternUnits="userSpaceOnUse">
         <circle cx="2" cy="2" r="1.3" fill="#2a6f99"></circle>
       </pattern>
-      <radialGradient id="hv-fade" cx="50%" cy="50%" r="50%">
-        <stop offset="0" stop-color="#fff" stop-opacity="0.55"></stop>
+      <radialGradient id="hv-fade" gradientUnits="userSpaceOnUse" cx={center.x} cy={center.y} r={outerR + 10}>
+        <stop offset="0" stop-color="#fff" stop-opacity="0.7"></stop>
+        <stop offset="0.75" stop-color="#fff" stop-opacity="0.4"></stop>
         <stop offset="1" stop-color="#fff" stop-opacity="0"></stop>
       </radialGradient>
       <mask id="hv-mask">
-        <rect width="560" height="520" fill="url(#hv-fade)"></rect>
+        <circle cx={center.x} cy={center.y} r={outerR} fill="url(#hv-fade)"></circle>
       </mask>
-      <linearGradient id="hv-leaf" x1="110" y1="450" x2="468" y2="318" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#5a8a33"></stop>
-        <stop offset="1" stop-color="#74a646"></stop>
-      </linearGradient>
     </defs>
 
     <!-- data field -->
     <rect class="hv-field" width="560" height="520" fill="url(#hv-dots)" mask="url(#hv-mask)"></rect>
 
-    <!-- orbits -->
-    <circle class="hv-orbit" cx={center.x} cy={center.y} r={r} stroke="#c9d7e1" stroke-width="1" stroke-dasharray="2 7"></circle>
-    <circle class="hv-orbit" cx={center.x} cy={center.y} r="140" stroke="#dbe4ea" stroke-width="1"></circle>
+    <!-- the mark itself -->
+    <Fragment set:html={markSvg} />
 
-    <!-- network links between nodes and the tallest bar -->
-    <g class="hv-links" stroke="#9db8cb" stroke-width="1">
-      <path d={`M${nodes[0].x} ${nodes[0].y} L${peak.x} ${peak.y} L${nodes[1].x} ${nodes[1].y}`}></path>
-      <path d={`M${nodes[2].x} ${nodes[2].y} L${nodes[3].x} ${nodes[3].y}`}></path>
-    </g>
-
-    <!-- main arc, as in the logo -->
-    <path
-      class="hv-arc"
-      d="M151.4 413.2 A200 200 0 1 1 433.2 131.4"
-      stroke="#0b3558"
-      stroke-width="13"
-      stroke-linecap="round"
-      pathLength="1"></path>
-
-    <!-- rising bars -->
-    <g class="hv-bars">
-      {
-        bars.map((b, i) => (
-          <rect
-            class="hv-bar"
-            style={`--i:${i}`}
-            x={b.x}
-            y={b.top}
-            width={barWidth}
-            height={b.height}
-            rx="3"
-            fill={barFill[i]}
-          />
-        ))
-      }
-    </g>
-
-    <!-- leaf: the ground the data grows from -->
-    <g class="hv-leaf">
-      <path d="M96 470 C190 405 300 362 478 316 C452 398 356 458 226 466 C176 469 132 471 96 470 Z" fill="url(#hv-leaf)"></path>
-      <path d="M182 452 C262 418 352 385 440 340" stroke="#fff" stroke-width="5" stroke-linecap="round"></path>
-    </g>
-
-    <!-- nodes -->
-    <g class="hv-nodes">
-      {
-        nodes.map((n, i) => (
-          <circle class="hv-node" style={`--i:${i}`} cx={n.x} cy={n.y} r="6" fill="#fff" stroke={i % 2 ? '#65963b' : '#2a6f99'} stroke-width="2" />
-        ))
-      }
-      <circle class="hv-node" style="--i:4" cx={peak.x} cy={peak.y} r="5" fill="#65963b"></circle>
-    </g>
   </svg>
 </div>
 
@@ -128,35 +63,35 @@ const nodes = nodeAngles.map((a) => ({
     overflow: visible;
   }
 
-  /* One orchestrated entrance: field and orbits settle, arc draws, bars rise, leaf grounds them, nodes connect. */
-  .hv-field,
-  .hv-orbit {
+  /* One orchestrated entrance. */
+  .hv-field {
     animation: hv-fade 1.4s var(--ease) both;
   }
-  .hv-arc {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: hv-draw 1.5s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
+  :global(.hv-mark .lm-arc) {
+    transform-box: view-box;
+    transform-origin: 640px 637px;
+    animation: hv-sweep 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.1s both;
   }
-  .hv-bar {
+  :global(.hv-mark .lm-bar1),
+  :global(.hv-mark .lm-bar2),
+  :global(.hv-mark .lm-bar3) {
     transform-box: fill-box;
     transform-origin: 50% 100%;
     animation: hv-rise 0.9s var(--ease) both;
-    animation-delay: calc(0.55s + var(--i) * 0.08s);
   }
-  .hv-leaf {
+  :global(.hv-mark .lm-bar1) {
+    animation-delay: 0.5s;
+  }
+  :global(.hv-mark .lm-bar2) {
+    animation-delay: 0.62s;
+  }
+  :global(.hv-mark .lm-bar3) {
+    animation-delay: 0.74s;
+  }
+  :global(.hv-mark .lm-leaf) {
     transform-box: fill-box;
     transform-origin: 0% 100%;
-    animation: hv-leaf 1s var(--ease) 0.45s both;
-  }
-  .hv-links {
-    animation: hv-fade 0.8s var(--ease) 1.45s both;
-  }
-  .hv-node {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: hv-pop 0.5s var(--ease) both;
-    animation-delay: calc(1.35s + var(--i) * 0.09s);
+    animation: hv-leaf 1s var(--ease) 0.4s both;
   }
 
   @keyframes hv-fade {
@@ -164,9 +99,10 @@ const nodes = nodeAngles.map((a) => ({
       opacity: 0;
     }
   }
-  @keyframes hv-draw {
-    to {
-      stroke-dashoffset: 0;
+  @keyframes hv-sweep {
+    from {
+      opacity: 0;
+      transform: rotate(-40deg);
     }
   }
   @keyframes hv-rise {
@@ -180,25 +116,15 @@ const nodes = nodeAngles.map((a) => ({
       transform: translate(-12px, 10px) scale(0.94);
     }
   }
-  @keyframes hv-pop {
-    from {
-      opacity: 0;
-      transform: scale(0.3);
-    }
-  }
 
   @media (prefers-reduced-motion: reduce) {
     .hv-field,
-    .hv-orbit,
-    .hv-arc,
-    .hv-bar,
-    .hv-leaf,
-    .hv-links,
-    .hv-node {
+    :global(.hv-mark .lm-arc),
+    :global(.hv-mark .lm-bar1),
+    :global(.hv-mark .lm-bar2),
+    :global(.hv-mark .lm-bar3),
+    :global(.hv-mark .lm-leaf) {
       animation: none;
-    }
-    .hv-arc {
-      stroke-dashoffset: 0;
     }
   }
 </style>

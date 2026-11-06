@@ -1,0 +1,134 @@
+---
+/**
+ * Contact call to action. No script: the address is plain selectable text and
+ * every link is a mailto: with the intent as its subject.
+ *
+ * variant "compact": address only (footer)
+ * variant "band":    large address + chosen intent links (PartnerBand)
+ * variant "page":    large address + all intents + WhatsApp when configured (contact page)
+ */
+import Icon from './Icon.astro';
+import { contact, intents, mailto, has, type IntentId } from '../config/site';
+
+interface Props {
+  variant: 'compact' | 'band' | 'page';
+  intents?: IntentId[];
+  tone?: 'light' | 'dark';
+}
+
+const { variant, intents: chosen, tone = 'light' } = Astro.props;
+const list =
+  variant === 'page' ? intents : intents.filter((i) => (chosen ?? ['proposal', 'references']).includes(i.id));
+const whatsappDigits = contact.whatsapp.replace(/\D/g, '');
+const placeholder = contact.emailIsPlaceholder ? '' : undefined;
+---
+
+{
+  variant === 'compact' ? (
+    <a class="cta-compact" href={mailto()} data-contact-placeholder={placeholder}>
+      {contact.email}
+    </a>
+  ) : (
+    <div class:list={['cta', `cta--${variant}`, `cta--${tone}`]} data-contact-placeholder={placeholder}>
+      <p class="cta__label mono">Email</p>
+      <a class="cta__address" href={mailto()}>
+        {contact.email}
+      </a>
+      <ul class="cta__intents" role="list">
+        {list.map((i) => (
+          <li>
+            <a href={mailto(i.id)}>
+              <Icon name="mail" size={18} />
+              <span>{i.label}</span>
+            </a>
+          </li>
+        ))}
+        {variant === 'page' && has(contact.whatsapp) && (
+          <li>
+            <a href={`https://wa.me/${whatsappDigits}`} rel="noopener">
+              <Icon name="chat" size={18} />
+              <span>WhatsApp {contact.whatsapp}</span>
+            </a>
+          </li>
+        )}
+      </ul>
+    </div>
+  )
+}
+
+<style>
+  .cta {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .cta__label {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .cta__address {
+    justify-self: start;
+    font-size: clamp(1.3rem, 0.85rem + 2.4vw, 2.25rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    overflow-wrap: break-word;
+  }
+  .cta__address:hover {
+    color: var(--blue);
+  }
+  .cta__intents {
+    list-style: none;
+    display: grid;
+    margin-top: 0.75rem;
+    border-top: 1px solid var(--rule);
+  }
+  .cta__intents a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.25s var(--ease), padding 0.3s var(--ease);
+  }
+  .cta__intents a:hover {
+    color: var(--blue);
+    padding-left: 0.35rem;
+  }
+  .cta__intents :global(.icon) {
+    color: var(--blue);
+    flex: none;
+  }
+
+  /* Dark tone, used inside the navy PartnerBand */
+  .cta--dark .cta__label {
+    color: rgb(255 255 255 / 0.6);
+  }
+  .cta--dark .cta__address,
+  .cta--dark .cta__intents a {
+    color: #fff;
+  }
+  .cta--dark .cta__address:hover,
+  .cta--dark .cta__intents a:hover {
+    color: #cfe3f1;
+  }
+  .cta--dark .cta__intents,
+  .cta--dark .cta__intents a {
+    border-color: rgb(255 255 255 / 0.18);
+  }
+  .cta--dark .cta__intents :global(.icon) {
+    color: #9cc3de;
+  }
+
+  .cta-compact {
+    overflow-wrap: anywhere;
+  }
+</style>

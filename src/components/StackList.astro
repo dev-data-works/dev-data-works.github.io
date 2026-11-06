@@ -1,0 +1,56 @@
+---
+import { stack } from '../data/content';
+
+const groups = [
+  { title: 'Engineering', items: stack.engineering },
+  { title: 'Data and GIS', items: stack.dataAndGis },
+  { title: 'Infrastructure', items: stack.infrastructure },
+  { title: 'Quality and APIs', items: stack.quality },
+];
+---
+
+<dl class="stack">
+  {
+    groups.map((g) => (
+      <div class="stack__group">
+        <dt>{g.title}</dt>
+        <dd>
+          <ul class="chip-list" role="list">
+            {g.items.map((item) => (
+              <li class="chip">{item}</li>
+            ))}
+          </ul>
+        </dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .stack {
+    display: grid;
+    margin: 0;
+  }
+  .stack__group {
+    display: grid;
+    gap: 0.75rem;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .stack__group:first-child {
+    border-top: 1px solid var(--rule);
+  }
+  @media (min-width: 48em) {
+    .stack__group {
+      grid-template-columns: 12rem 1fr;
+      align-items: baseline;
+    }
+  }
+  dt {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  dd {
+    margin: 0;
+  }
+</style>
