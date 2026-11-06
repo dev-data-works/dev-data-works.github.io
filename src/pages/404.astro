@@ -4,15 +4,16 @@ import PageHeader from '../components/PageHeader.astro';
 import { url } from '../config/site';
 ---
 
-<Base title="Page not found" description="The page you are looking for could not be found.">
+<Base title="Page not found" description="This page does not exist.">
   <PageHeader
-    kicker="Error 404"
-    title="This page could not be found."
-    lede="The address may be mistyped, or the page may have moved. Use the links below to continue."
+    kicker="Page not found"
+    title="This page does not exist."
+    lede="It may have moved. These pages are a good place to start:"
   >
     <div class="button-row">
-      <a class="button" href={url('/')}>Go to the homepage</a>
-      <a class="button button--ghost" href={url('/contact')}>Contact us</a>
+      <a class="button" href={url('/work')}>What we build</a>
+      <a class="button button--ghost" href={url('/expertise')}>Expertise</a>
+      <a class="button button--ghost" href={url('/contact')}>Contact</a>
     </div>
   </PageHeader>
 </Base>

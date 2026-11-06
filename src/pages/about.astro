@@ -2,57 +2,40 @@
 import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import PartnerBand from '../components/PartnerBand.astro';
+import SectionHead from '../components/SectionHead.astro';
+import TeamRoles from '../components/TeamRoles.astro';
 import ApproachSteps from '../components/ApproachSteps.astro';
 import { principles } from '../data/content';
+import { org, has } from '../config/site';
+
+const facts = [
+  { label: 'Legal name', value: org.legalName },
+  { label: 'Registered in', value: org.jurisdiction },
+  { label: 'Registration', value: org.registration },
+  { label: 'Location', value: org.location },
+].filter((f) => has(f.value));
 ---
 
 <Base
   title="About us"
-  description="DevDataWorks is a technology organization that applies software, data, and innovation to help partners address complex challenges and deliver measurable impact."
+  description="DevDataWorks is a small team with long experience in development programmes, enterprise technology, and the software and data systems behind them."
 >
   <PageHeader
     kicker="About us"
-    title="Where technology, data, and development meet."
-    lede="DevDataWorks is a technology organization dedicated to creating meaningful impact through innovative, data-driven solutions, built in partnership with the organizations working on the world’s most complex challenges."
+    title="A small team with long experience in development data."
+    lede="DevDataWorks brings together experience in development programmes, enterprise technology and the software and data systems that support them. We work with organisations that need systems their teams can run and trust after we have left."
   />
 
-  <section class="section" aria-labelledby="mission-title">
-    <div class="container split">
-      <div class="split__aside section-head">
-        <p class="kicker">Our mission</p>
-        <h2 id="mission-title">Better information, better tools, better outcomes.</h2>
-      </div>
-      <div class="prose">
-        <p class="lede">
-          We build innovative, data-driven technology solutions that create meaningful impact across sectors,
-          communities, and the world.
-        </p>
-        <p>
-          Organizations working on development and public-interest challenges are asked to do more with less, and to
-          show what difference they make. Too often, the systems they rely on were not designed for the realities of
-          their work: data is fragmented, tools are hard to maintain, and insight arrives too late to inform
-          decisions.
-        </p>
-        <p>
-          DevDataWorks exists to close that gap. We combine software engineering, data expertise, and an
-          understanding of how development programs operate, so that the technology we deliver is useful from the
-          first day and sustainable for years after.
-        </p>
-        <p>
-          Our expertise is deliberately sector-agnostic. Whether the challenge involves farms, clinics, classrooms,
-          water systems, or public institutions, the underlying need is often the same: trustworthy information, and
-          tools that help people act on it.
-        </p>
-      </div>
+  <section class="section" aria-labelledby="team-title">
+    <div class="container stack">
+      <SectionHead index="01" label="Who we are" title="Three roles, one team." id="team-title" />
+      <TeamRoles variant="full" />
     </div>
   </section>
 
   <section class="section section--mist" aria-labelledby="principles-title">
-    <div class="container">
-      <div class="section-head principles-head">
-        <p class="kicker">What guides us</p>
-        <h2 id="principles-title">The principles behind our work.</h2>
-      </div>
+    <div class="container stack">
+      <SectionHead index="02" label="What guides us" title="The principles behind our work." id="principles-title" />
       <ul class="principles" role="list">
         {
           principles.map((p) => (
@@ -67,34 +50,45 @@ import { principles } from '../data/content';
   </section>
 
   <section class="section" aria-labelledby="approach-title">
-    <div class="container">
-      <div class="section-head approach-head">
-        <p class="kicker">How we work</p>
-        <h2 id="approach-title">A process built around partnership.</h2>
-        <p>Every engagement follows the same four stages, adapted to the scale and context of the work.</p>
-      </div>
+    <div class="container stack">
+      <SectionHead index="03" label="How we work" title="How we work with partners." id="approach-title" />
       <ApproachSteps />
     </div>
   </section>
 
+  {
+    facts.length > 0 && (
+      <section class="section section--rule" aria-labelledby="facts-title">
+        <div class="container stack">
+          <SectionHead index="04" label="Organisation" title="Organisation details" id="facts-title" />
+          <dl class="facts">
+            {facts.map((f) => (
+              <div>
+                <dt>{f.label}</dt>
+                <dd>{f.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+    )
+  }
 
   <PartnerBand />
 </Base>
 
 <style>
-  .principles-head,
-  .approach-head {
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  .stack {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
   }
-
+  .section--rule {
+    border-top: 1px solid var(--rule);
+  }
   .principles {
     list-style: none;
     display: grid;
-    gap: 1px;
-    background: var(--line);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-m);
-    overflow: hidden;
+    column-gap: clamp(2rem, 4vw, 3rem);
   }
   @media (min-width: 40em) {
     .principles {
@@ -109,21 +103,28 @@ import { principles } from '../data/content';
   .principle {
     display: grid;
     align-content: start;
-    gap: 0.75rem;
-    padding: 2rem 1.75rem 2.25rem;
-    background: #fff;
+    gap: 0.6rem;
+    padding-block: 1.5rem 2rem;
+    border-top: 1px solid var(--ink);
   }
-  .principle::before {
-    content: '';
-    width: 2rem;
-    height: 3px;
-    border-radius: 3px;
-    background: var(--green);
-    margin-bottom: 0.5rem;
+  .principle h3 {
+    font-size: var(--step-2);
   }
-
-  .section--rule {
-    border-top: 1px solid var(--line);
+  .facts {
+    display: grid;
+    margin: 0;
   }
-
+  .facts div {
+    display: grid;
+    grid-template-columns: 12rem 1fr;
+    padding-block: 0.85rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .facts dt {
+    color: var(--text-muted);
+  }
+  .facts dd {
+    margin: 0;
+    color: var(--ink);
+  }
 </style>
