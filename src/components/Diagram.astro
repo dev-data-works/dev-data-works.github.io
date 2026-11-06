@@ -56,8 +56,12 @@ const captionId = `${pattern.slug}-diagram-caption`;
   }
   .diagram__canvas {
     overflow-x: auto;
-    padding-block: 0.5rem;
-    border-block: 1px solid var(--rule);
+    padding: 0.75rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-m);
+    background:
+      radial-gradient(circle at 1px 1px, rgb(42 111 153 / 0.14) 1px, transparent 0) 0 0 / 16px 16px,
+      #fbfcfd;
     scrollbar-width: thin;
   }
   .diagram__canvas :global(svg) {
@@ -68,42 +72,51 @@ const captionId = `${pattern.slug}-diagram-caption`;
     overflow: visible;
   }
 
-  /* Drawing spec: systems in ink line, people in leaf green. */
+  /* Cards: icon on top, name below. People in leaf green, outside systems dashed,
+     data stores tinted blue. */
   .diagram__canvas :global(.n) {
     fill: #fff;
-    stroke: var(--ink);
-    stroke-width: 1.5;
+    stroke: var(--rule);
+    stroke-width: 1;
+    filter: drop-shadow(0 1px 1px rgb(11 53 88 / 0.06)) drop-shadow(0 6px 14px rgb(11 53 88 / 0.08));
   }
-  .diagram__canvas :global(.n--external) {
-    stroke-dasharray: 5 4;
-    stroke: var(--text-muted);
-  }
-  .diagram__canvas :global(.n--person) {
+  .diagram__canvas :global(.node--person .n) {
     fill: var(--green-soft);
-    stroke: var(--green-ink);
+    stroke: #cfe0bf;
   }
-  .diagram__canvas :global(.n--store) {
-    fill: var(--blue-soft);
+  .diagram__canvas :global(.node--store .n) {
+    fill: #f2f7fb;
+    stroke: #d2e2ee;
+  }
+  .diagram__canvas :global(.node--external .n) {
+    fill: #fbfcfd;
+    stroke: #b9c9d5;
+    stroke-dasharray: 4 3;
+    filter: none;
   }
   .diagram__canvas :global(.t) {
     fill: var(--ink);
     font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     text-anchor: middle;
   }
-  .diagram__canvas :global(.node:has(.n--person) .t) {
+  .diagram__canvas :global(.node--person .t) {
     fill: var(--green-ink);
-    font-weight: 600;
+  }
+  .diagram__canvas :global(.node--external .t) {
+    fill: var(--text);
+    font-weight: 500;
   }
   .diagram__canvas :global(.e) {
     fill: none;
-    stroke: var(--blue);
-    stroke-width: 1.5;
+    stroke: #8fb3cc;
+    stroke-width: 1.4;
   }
   .diagram__canvas :global(.arrowhead) {
     fill: none;
-    stroke: var(--blue);
+    stroke: #8fb3cc;
     stroke-width: 1.6;
     stroke-linecap: round;
     stroke-linejoin: round;

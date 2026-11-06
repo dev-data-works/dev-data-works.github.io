@@ -42,9 +42,9 @@ public/           Favicons, web manifest, Open Graph image
 
 1. Edit the entry in `patterns` (`src/data/content.ts`): problem, exactly three features, stack, caption and flow steps.
 2. Link it from the relevant `capabilities[].patterns` and `sectors[].patterns` (links are stored only there).
-3. Update the SVG in `src/components/diagrams/<slug>.svg` and register it in `Diagram.astro`.
+3. Add the diagram (nodes with kind, label, grid position and icon; edges) to `scripts/build-diagrams.py`, run `python3 scripts/build-diagrams.py`, and register the new SVG in `Diagram.astro`.
 
-Diagram drawing spec: nodes 112 × 56 on a grid with 144-unit column pitch and 112-unit row pitch; classes `n n--person|app|service|store|external` for shapes, `t` for labels, `e` for connectors with `pathLength="1"`, and a per-diagram `<slug>-arrow` marker. People are styled green, systems in ink. The numbered flow under the drawing is its text alternative, so keep the two in step.
+Diagrams are icon cards on a grid (card 128 × 76, column pitch 150, row pitch 112). Card kinds: `person` (green), `app` and `service` (white), `store` (blue tint), `external` (dashed). Icons come from `src/data/tool-icons.ts` (the same brand icons as the stack chips), `src/assets/platforms/`, or the script's own line-icon set. The numbered flow under each drawing is its text alternative, so keep the two in step.
 
 ## Content rule (check before every push)
 
