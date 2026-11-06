@@ -1,8 +1,8 @@
 ---
 /**
  * Hero illustration: the DevDataWorks mark (traced from the logo, see
- * src/assets/logo-mark.svg) centred on a round field of data points and two
- * orbits, all sharing the logo circle's centre. Animated once on load (CSS
+ * src/assets/logo-mark.svg) centred on a round field of data points that
+ * shares the logo circle's centre. Animated once on load (CSS
  * only): the field settles, the arc sweeps in, the bars rise one by one, the
  * leaf grounds them. Nothing animates under reduced motion.
  */
@@ -16,8 +16,7 @@ const scale = width / 760;
 const mark = { x: +(center.x - (640 - 250) * scale).toFixed(2), y: +(center.y - (637 - 250) * scale).toFixed(2), width };
 const height = Math.round(700 * scale);
 
-// The logo's circle radius on the canvas, used for the orbits and the dot field.
-const ring = center;
+// The logo's circle radius on the canvas; the dot field extends a little beyond it.
 const ringR = 378 * scale; // outer edge of the arc
 const markSvg = markRaw
   .replace(' role="img" aria-label="DevDataWorks"', '')
@@ -46,10 +45,6 @@ const outerR = ringR + 34;
     <!-- data field -->
     <rect class="hv-field" width="560" height="520" fill="url(#hv-dots)" mask="url(#hv-mask)"></rect>
 
-    <!-- orbits around the mark -->
-    <circle class="hv-orbit" cx={ring.x} cy={ring.y} r={outerR} stroke="#c9d7e1" stroke-width="1" stroke-dasharray="2 7"></circle>
-    <circle class="hv-orbit" cx={ring.x} cy={ring.y} r={ringR * 0.62} stroke="#dbe4ea" stroke-width="1"></circle>
-
     <!-- the mark itself -->
     <Fragment set:html={markSvg} />
 
@@ -69,8 +64,7 @@ const outerR = ringR + 34;
   }
 
   /* One orchestrated entrance. */
-  .hv-field,
-  .hv-orbit {
+  .hv-field {
     animation: hv-fade 1.4s var(--ease) both;
   }
   :global(.hv-mark .lm-arc) {
@@ -125,7 +119,6 @@ const outerR = ringR + 34;
 
   @media (prefers-reduced-motion: reduce) {
     .hv-field,
-    .hv-orbit,
     :global(.hv-mark .lm-arc),
     :global(.hv-mark .lm-bar1),
     :global(.hv-mark .lm-bar2),
