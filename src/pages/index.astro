@@ -136,17 +136,28 @@ import { url } from '../config/site';
     padding-block: clamp(3rem, 6vw, 5.5rem);
     border-bottom: 1px solid var(--rule);
   }
-  /* A band of data points down the right of the hero, fading in from left to right. */
+  /*
+   * A band of data points across the right three quarters of the hero: clear behind
+   * the headline, a faint shade through the middle, denser on the right. The same
+   * stops are mirrored in the script below (BAND), which redraws the band as a
+   * cursor-reactive canvas on desktop.
+   */
   .hero::before {
     content: '';
     position: absolute;
     z-index: -1;
     inset: 0 0 0 auto;
-    width: 25vw;
+    width: 75%;
     background-image: radial-gradient(circle at 2px 2px, rgb(42 111 153 / 0.5) 1.3px, transparent 1.7px);
     background-size: 20px 20px;
     background-position: right top;
-    mask-image: linear-gradient(to right, transparent, #000 85%);
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgb(0 0 0 / 0.18) 22%,
+      rgb(0 0 0 / 0.3) 58%,
+      #000 84%
+    );
     pointer-events: none;
   }
   /* On small screens the band would sit behind the body text: leave it out. */
