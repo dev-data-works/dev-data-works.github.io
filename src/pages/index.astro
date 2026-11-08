@@ -13,6 +13,12 @@ import { url } from '../config/site';
 ---
 
 <Base>
+  <!-- Before the hero paints: on desktop with a mouse (and motion allowed) the canvas
+       below owns the dot band, so the CSS dots are hidden and never seen side by side. -->
+  <script is:inline>
+    matchMedia('(hover:hover) and (pointer:fine) and (min-width:60em) and (prefers-reduced-motion:no-preference)')
+      .matches && document.documentElement.classList.add('dots-live');
+  </script>
   <section class="hero">
     <div class="container hero__grid">
       <div class="hero__copy">
@@ -128,6 +134,98 @@ import { url } from '../config/site';
   <PartnerBand />
 </Base>
 
+<script is:inline>
+  // Cursor-reactive dot band (desktop, mouse, motion allowed; see the flag above).
+  // Draws the band once as a ripple from the right, then sleeps; while the mouse
+  // moves over the hero, dots near it ease away and settle back when it leaves.
+  (() => {
+    const root = document.documentElement;
+    const hero = document.querySelector('.hero');
+    if (!hero || !root.classList.contains('dots-live')) return;
+    const PITCH = 20, DOT = 1.5, RADIUS = 110, PUSH = 14;
+    // Same stops as the CSS mask on .hero::before: [position across band, opacity].
+    const BAND = [[0, 0], [0.22, 0.18], [0.58, 0.3], [0.84, 1], [1, 1]];
+    const band = (f) => {
+      for (let i = 1; i < BAND.length; i++) {
+        const [x1, a1] = BAND[i], [x0, a0] = BAND[i - 1];
+        if (f <= x1) return a0 + ((f - x0) / (x1 - x0)) * (a1 - a0);
+      }
+      return 1;
+    };
+    const canvas = document.createElement('canvas');
+    canvas.className = 'hero__dots';
+    canvas.setAttribute('aria-hidden', 'true');
+    hero.prepend(canvas);
+    const ctx = canvas.getContext('2d');
+    let w = 0, h = 0, dots = [], mx = -1e4, my = -1e4, raf = 0, start = 0;
+
+    const layout = () => {
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      const dpr = devicePixelRatio || 1;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      dots = [];
+      // Anchored at the right edge, like background-position: right top.
+      for (let x = w - PITCH + 2; x > 0; x -= PITCH)
+        for (let y = 2; y < h; y += PITCH) dots.push({ x, y, ox: 0, oy: 0, a: 0.5 * band(x / w) });
+    };
+
+    const frame = (t) => {
+      if (!start) start = t;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = '#2a6f99';
+      let busy = false;
+      for (const d of dots) {
+        // Entrance: a ripple from the right edge, about 0.9 s across the band.
+        const e = Math.min(1, Math.max(0, (t - start - ((w - d.x) / w) * 600) / 350));
+        if (e < 1) busy = true;
+        if (!e || !d.a) continue;
+        const dx = d.x - mx, dy = d.y - my, dist = Math.hypot(dx, dy) || 1;
+        const k = dist < RADIUS ? (1 - dist / RADIUS) ** 2 : 0;
+        const sx = ((dx / dist) * k * PUSH - d.ox) * 0.14, sy = ((dy / dist) * k * PUSH - d.oy) * 0.14;
+        d.ox += sx;
+        d.oy += sy;
+        if (Math.abs(sx) + Math.abs(sy) > 0.02) busy = true;
+        ctx.globalAlpha = Math.min(1, d.a + k * 0.35) * e;
+        ctx.beginPath();
+        ctx.arc(d.x + d.ox, d.y + d.oy, DOT * (0.4 + 0.6 * e) + k * 0.6, 0, 6.2832);
+        ctx.fill();
+      }
+      root.classList.add('dots-ready');
+      raf = busy ? requestAnimationFrame(frame) : 0;
+    };
+    const wake = () => raf || (raf = requestAnimationFrame(frame));
+
+    hero.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const r = canvas.getBoundingClientRect();
+      mx = e.clientX - r.left;
+      my = e.clientY - r.top;
+      wake();
+    });
+    hero.addEventListener('pointerleave', () => {
+      mx = my = -1e4;
+      wake();
+    });
+    const ro = new ResizeObserver(() => {
+      layout();
+      wake();
+    });
+    ro.observe(hero);
+    // Settings changed mid-visit (smaller window, reduced motion): back to the CSS dots.
+    const mq = matchMedia('(hover:hover) and (pointer:fine) and (min-width:60em) and (prefers-reduced-motion:no-preference)');
+    mq.addEventListener('change', () => {
+      if (mq.matches) return;
+      ro.disconnect();
+      cancelAnimationFrame(raf);
+      canvas.remove();
+      root.classList.remove('dots-live', 'dots-ready');
+    }, { once: true });
+  })();
+</script>
+
 <style>
   .hero {
     position: relative;
@@ -158,6 +256,28 @@ import { url } from '../config/site';
       rgb(0 0 0 / 0.3) 58%,
       #000 84%
     );
+    pointer-events: none;
+  }
+  /* Desktop with a mouse: the canvas draws the band. If it never draws, the CSS
+     dots come back after 1.5 s. */
+  :global(.dots-live) .hero::before {
+    opacity: 0;
+    animation: dots-fallback 0.4s ease 1.5s forwards;
+  }
+  :global(.dots-live.dots-ready) .hero::before {
+    display: none;
+  }
+  @keyframes dots-fallback {
+    to {
+      opacity: 1;
+    }
+  }
+  :global(.hero__dots) {
+    position: absolute;
+    z-index: -1;
+    inset: 0 0 0 auto;
+    width: 75%;
+    height: 100%;
     pointer-events: none;
   }
   /* On small screens the band would sit behind the body text: leave it out. */

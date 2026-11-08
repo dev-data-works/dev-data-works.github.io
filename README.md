@@ -1,6 +1,6 @@
 # DevDataWorks website
 
-The official website of DevDataWorks, built with [Astro](https://astro.build) as a fully static site and deployed to GitHub Pages. No client-side framework, no analytics, no third-party scripts; the only JavaScript is the small inline script for the mobile menu.
+The official website of DevDataWorks, built with [Astro](https://astro.build) as a fully static site and deployed to GitHub Pages. No client-side framework, no analytics, no third-party scripts; the only JavaScript is two small inline scripts: the cursor-reactive dot band in the home hero (desktop with a mouse only, about 4 KB) and the enquiry form at /contact/forms. Every page works without them.
 
 ## Development
 
