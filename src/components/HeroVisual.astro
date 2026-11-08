@@ -1,39 +1,235 @@
 ---
 /**
- * Hero illustration: the DevDataWorks mark (traced from the logo, see
- * src/assets/logo-mark.svg); the hero section draws the dot band behind it.
- * Animated once on load (CSS
- * only): the arc sweeps in, the bars rise one by one, the
- * leaf grounds them. Nothing animates under reduced motion.
+ * Hero illustration: an isometric "data stack" drawn in plain SVG (no WebGL,
+ * no script). Three glass slabs, from the field (data points) through the
+ * platform (a network) to the decision (bars), joined by vertical beams that
+ * carry data upwards. All geometry is computed here at build time; the page
+ * ships only the resulting SVG.
+ *
+ * Motion is CSS only: the slabs settle in once, the bars rise, then the layers
+ * drift a few pixels and the beams flow. Nothing moves under reduced motion,
+ * and every element is visible without animation.
  */
-import markRaw from '../assets/logo-mark.svg?raw';
 
-// Place the mark (viewBox 250 250 760 700) so the logo circle's centre
-// (640, 637 in logo units, fitted to the arc) lands exactly on the canvas centre (280, 260).
-const center = { x: 280, y: 260 };
-const width = 420;
-const scale = width / 760;
-const mark = { x: +(center.x - (640 - 250) * scale).toFixed(2), y: +(center.y - (637 - 250) * scale).toFixed(2), width };
-const height = Math.round(700 * scale);
+type P3 = [number, number, number];
 
-const markSvg = markRaw
-  .replace(' role="img" aria-label="DevDataWorks"', '')
-  .replace('<svg ', `<svg class="hv-mark" x="${mark.x}" y="${mark.y}" width="${mark.width}" height="${height}" `);
+// Isometric projection: x runs down-right, y down-left, z straight up.
+const S = 1.05; // scale
+const C = { x: 290, y: 368 }; // screen position of the world origin
+const COS = Math.cos(Math.PI / 6);
+const iso = ([x, y, z]: P3) => [C.x + (x - y) * COS * S, C.y + (x + y) * 0.5 * S - z * S] as const;
+const pts = (list: P3[]) => list.map((p) => iso(p).map((n) => n.toFixed(1)).join(',')).join(' ');
+const f = (n: number) => +n.toFixed(1);
 
+const H = 100; // half the slab side
+const T = 10; // slab thickness
+const GAP = 140; // vertical distance between slabs
+const levels = [
+  { key: 'field', z: -GAP, label: 'Field', n: '01' },
+  { key: 'platform', z: 0, label: 'Platform', n: '02' },
+  { key: 'decision', z: GAP, label: 'Decision', n: '03' },
+] as const;
+
+const slab = (z: number) => ({
+  top: pts([[-H, -H, z], [H, -H, z], [H, H, z], [-H, H, z]]),
+  right: pts([[H, -H, z], [H, H, z], [H, H, z - T], [H, -H, z - T]]),
+  left: pts([[-H, H, z], [H, H, z], [H, H, z - T], [-H, H, z - T]]),
+  rim: pts([[-H, H, z], [-H, -H, z], [H, -H, z]]),
+});
+
+// A circle lying flat on a slab becomes an axis-aligned ellipse in isometric view.
+const flat = (x: number, y: number, z: number, r: number) => {
+  const [cx, cy] = iso([x, y, z]);
+  return { cx: f(cx), cy: f(cy), rx: f(r * S * 1.2247), ry: f(r * S * 0.7071) };
+};
+
+// Field: a dot grid, a few captured points (green) that feed the beams.
+const fieldZ = levels[0].z;
+const grid: { cx: number; cy: number; rx: number; ry: number }[] = [];
+for (let i = -4; i <= 4; i++) for (let j = -4; j <= 4; j++) grid.push(flat(i * 20, j * 20, fieldZ, 1.6));
+const captured: [number, number][] = [[-60, -20], [-20, 40], [40, -40], [60, 40], [0, -80], [-60, 60]];
+
+// Platform: nodes and links; the first three sit above captured points.
+const platZ = levels[1].z;
+const nodes: [number, number][] = [[-60, -20], [40, -40], [-20, 40], [10, 0], [60, 40], [-40, -70]];
+const links: [number, number][] = [[0, 3], [1, 3], [2, 3], [3, 4], [0, 5], [5, 1], [2, 4]];
+const linkPaths = links.map(([a, b]) => {
+  const [x1, y1] = iso([...nodes[a], platZ]);
+  const [x2, y2] = iso([...nodes[b], platZ]);
+  return `M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`;
+});
+
+// Decision: bars (isometric prisms), drawn back to front.
+const decZ = levels[2].z;
+const bars = [
+  { x: -60, y: 20, h: 34, tone: 'a' },
+  { x: -20, y: 20, h: 56, tone: 'b' },
+  { x: 20, y: 20, h: 80, tone: 'c' },
+  { x: 60, y: 20, h: 108, tone: 'g' },
+].sort((a, b) => a.x + a.y - (b.x + b.y));
+const W = 13; // half bar width
+const prisms = bars.map((b, i) => {
+  const z0 = decZ;
+  const z1 = decZ + b.h;
+  const [x0, y0] = [b.x - W, b.y - W];
+  const [x1, y1] = [b.x + W, b.y + W];
+  return {
+    tone: b.tone,
+    delay: 0.9 + i * 0.08,
+    top: pts([[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]]),
+    right: pts([[x1, y0, z1], [x1, y1, z1], [x1, y1, z0], [x1, y0, z0]]),
+    left: pts([[x0, y1, z1], [x1, y1, z1], [x1, y1, z0], [x0, y1, z0]]),
+  };
+});
+
+// Beams: vertical lines that carry data from one slab to the next.
+const beam = (x: number, y: number, z0: number, z1: number) => {
+  const [ax, ay] = iso([x, y, z0]);
+  const [, by] = iso([x, y, z1]);
+  return `M${f(ax)} ${f(ay)}V${f(by)}`;
+};
+const beams = [
+  ...captured.slice(0, 3).map(([x, y]) => beam(x, y, fieldZ, platZ - T)),
+  beam(10, 0, platZ, decZ - T),
+  beam(60, 40, platZ, decZ - T),
+];
+
+// Labels hang off the left corner of each slab.
+const labels = levels.map((l) => {
+  const [x, y] = iso([-H, H, l.z - T / 2]);
+  return { ...l, x: f(x), y: f(y) };
+});
+
+// A thin orbit around the middle of the stack, split so the back half sits behind it.
+const orbit = flat(0, 0, platZ - 6, 150);
+const orbitBack = `M${f(orbit.cx - orbit.rx)} ${orbit.cy}A${orbit.rx} ${orbit.ry} 0 0 1 ${f(orbit.cx + orbit.rx)} ${orbit.cy}`;
+const orbitFront = `M${f(orbit.cx + orbit.rx)} ${orbit.cy}A${orbit.rx} ${orbit.ry} 0 0 1 ${f(orbit.cx - orbit.rx)} ${orbit.cy}`;
+const shadow = flat(0, 0, fieldZ - T - 14, 150);
 ---
 
 <div class="hero-visual" aria-hidden="true">
-  <svg viewBox="0 0 560 520" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- the mark itself -->
-    <Fragment set:html={markSvg} />
+  <svg viewBox="0 0 560 660" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="hv-glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#e5eef5" />
+        <stop offset="1" stop-color="#e5eef5" stop-opacity="0" />
+      </radialGradient>
+      <radialGradient id="hv-shadow" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#0b3558" stop-opacity="0.22" />
+        <stop offset="1" stop-color="#0b3558" stop-opacity="0" />
+      </radialGradient>
+      <linearGradient id="hv-top" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.82" />
+        <stop offset="1" stop-color="#d6e5f0" stop-opacity="0.7" />
+      </linearGradient>
+      <linearGradient id="hv-top-field" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.95" />
+        <stop offset="1" stop-color="#e3eedb" stop-opacity="0.95" />
+      </linearGradient>
+      <linearGradient id="hv-right" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#2a6f99" />
+        <stop offset="1" stop-color="#0b3558" />
+      </linearGradient>
+      <linearGradient id="hv-left" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#4f8bb2" />
+        <stop offset="1" stop-color="#2a6f99" />
+      </linearGradient>
+      <linearGradient id="hv-beam" gradientUnits="userSpaceOnUse" x1="0" y1="620" x2="0" y2="140">
+        <stop offset="0" stop-color="#65963b" />
+        <stop offset="1" stop-color="#2a6f99" />
+      </linearGradient>
+    </defs>
 
+    <ellipse cx="290" cy="340" rx="290" ry="320" fill="url(#hv-glow)" />
+    <ellipse class="hv-shadow" cx={shadow.cx} cy={shadow.cy} rx={shadow.rx} ry={shadow.ry} fill="url(#hv-shadow)" />
+    <path class="hv-orbit" d={orbitBack} />
+
+    {
+      levels.map((l, li) => {
+        const s = slab(l.z);
+        return (
+          <g class={`hv-layer hv-layer--${l.key}`} style={`--i:${li}`}><g class="hv-float">
+            <polygon points={s.left} fill="url(#hv-left)" />
+            <polygon points={s.right} fill="url(#hv-right)" />
+            <polygon points={s.top} fill={l.key === 'field' ? 'url(#hv-top-field)' : 'url(#hv-top)'} />
+            <polyline class="hv-rim" points={s.rim} />
+
+            {l.key === 'field' && (
+              <g>
+                {grid.map((d) => (
+                  <ellipse cx={d.cx} cy={d.cy} rx={d.rx} ry={d.ry} fill="#4f8bb2" opacity="0.45" />
+                ))}
+                {captured.map(([x, y]) => {
+                  const ring = flat(x, y, fieldZ, 9);
+                  const dot = flat(x, y, fieldZ, 4);
+                  return (
+                    <g>
+                      <ellipse class="hv-ping" cx={ring.cx} cy={ring.cy} rx={ring.rx} ry={ring.ry} />
+                      <ellipse cx={dot.cx} cy={dot.cy} rx={dot.rx} ry={dot.ry} fill="#65963b" />
+                    </g>
+                  );
+                })}
+              </g>
+            )}
+
+            {l.key === 'platform' && (
+              <g>
+                {linkPaths.map((d) => (
+                  <path class="hv-link" d={d} />
+                ))}
+                {nodes.map(([x, y], ni) => {
+                  const n = flat(x, y, platZ, ni === 3 ? 9 : 6);
+                  return (
+                    <ellipse
+                      class={ni === 3 ? 'hv-node hv-node--hub' : 'hv-node'}
+                      cx={n.cx}
+                      cy={n.cy}
+                      rx={n.rx}
+                      ry={n.ry}
+                    />
+                  );
+                })}
+              </g>
+            )}
+
+            {l.key === 'decision' &&
+              prisms.map((p) => (
+                <g class={`hv-bar hv-bar--${p.tone}`} style={`--d:${p.delay}s`}>
+                  <polygon class="hv-bar__l" points={p.left} />
+                  <polygon class="hv-bar__r" points={p.right} />
+                  <polygon class="hv-bar__t" points={p.top} />
+                </g>
+              ))}
+          </g></g>
+        );
+      })
+    }
+
+    <g class="hv-beams">
+      {beams.map((d, bi) => <path d={d} style={`--b:${bi}`} />)}
+    </g>
+
+    <path class="hv-orbit hv-orbit--front" d={orbitFront} />
+
+    <g class="hv-labels">
+      {
+        labels.map((l) => (
+          <g style={`--i:${l.n}`}>
+            <path d={`M${l.x - 6} ${l.y}H${l.x - 34}`} />
+            <text x={l.x - 40} y={l.y + 3.5} text-anchor="end">
+              <tspan class="hv-labels__n">{l.n}</tspan> {l.label}
+            </text>
+          </g>
+        ))
+      }
+    </g>
   </svg>
 </div>
 
 <style>
   .hero-visual {
     width: 100%;
-    max-width: 34rem;
+    max-width: 36rem;
     margin-inline: auto;
   }
   svg {
@@ -42,64 +238,151 @@ const markSvg = markRaw
     overflow: visible;
   }
 
-  /* One orchestrated entrance. */
-    :global(.hv-mark .lm-arc) {
-    transform-box: view-box;
-    transform-origin: 640px 637px;
-    animation: hv-sweep 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.1s both;
+  .hv-rim {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
   }
-  :global(.hv-mark .lm-bar1),
-  :global(.hv-mark .lm-bar2),
-  :global(.hv-mark .lm-bar3) {
-    transform-box: fill-box;
-    transform-origin: 50% 100%;
-    animation: hv-rise 0.9s var(--ease) both;
+  .hv-ping {
+    fill: none;
+    stroke: #65963b;
+    stroke-width: 1.2;
+    opacity: 0.5;
   }
-  :global(.hv-mark .lm-bar1) {
-    animation-delay: 0.5s;
+  .hv-link {
+    stroke: #4f8bb2;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    opacity: 0.7;
   }
-  :global(.hv-mark .lm-bar2) {
-    animation-delay: 0.62s;
+  .hv-node {
+    fill: #fff;
+    stroke: #2a6f99;
+    stroke-width: 2;
   }
-  :global(.hv-mark .lm-bar3) {
-    animation-delay: 0.74s;
+  .hv-node--hub {
+    fill: #0b3558;
+    stroke: #fff;
   }
-  :global(.hv-mark .lm-leaf) {
-    transform-box: fill-box;
-    transform-origin: 0% 100%;
-    animation: hv-leaf 1s var(--ease) 0.4s both;
+  .hv-bar__t {
+    fill: #fff;
   }
+  .hv-bar--a .hv-bar__l { fill: #7fadc9; }
+  .hv-bar--a .hv-bar__r { fill: #4f8bb2; }
+  .hv-bar--a .hv-bar__t { fill: #dfeaf2; }
+  .hv-bar--b .hv-bar__l { fill: #4f8bb2; }
+  .hv-bar--b .hv-bar__r { fill: #2a6f99; }
+  .hv-bar--b .hv-bar__t { fill: #cfe0ec; }
+  .hv-bar--c .hv-bar__l { fill: #2a6f99; }
+  .hv-bar--c .hv-bar__r { fill: #0b3558; }
+  .hv-bar--c .hv-bar__t { fill: #b9d1e2; }
+  .hv-bar--g .hv-bar__l { fill: #7fb352; }
+  .hv-bar--g .hv-bar__r { fill: #4a7a2a; }
+  .hv-bar--g .hv-bar__t { fill: #d6e8c5; }
 
-  @keyframes hv-fade {
-    from {
-      opacity: 0;
+  .hv-beams path {
+    stroke: url(#hv-beam);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 3 7;
+  }
+  .hv-orbit {
+    stroke: #2a6f99;
+    stroke-width: 1;
+    stroke-dasharray: 2 6;
+    opacity: 0.45;
+  }
+  .hv-orbit--front {
+    opacity: 0.7;
+  }
+  .hv-labels path {
+    stroke: #8ea6b8;
+    stroke-width: 1;
+  }
+  .hv-labels text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    fill: #3a526a;
+  }
+  /* Small screens: the stack is a small emblem above the heading; labels would be unreadable. */
+  @media (max-width: 59.99em) {
+    .hv-labels {
+      display: none;
     }
   }
-  @keyframes hv-sweep {
+  .hv-labels__n {
+    fill: #4a7a2a;
+    font-weight: 600;
+  }
+
+  /* Motion: settle in once, then drift and flow. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hv-layer {
+      animation: hv-settle 0.9s var(--ease) calc(var(--i) * 0.14s) both;
+    }
+    .hv-float {
+      animation: hv-drift 7s ease-in-out calc(var(--i) * -2.3s) infinite alternate;
+    }
+    .hv-bar {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      animation: hv-rise 0.8s var(--ease) var(--d) both;
+    }
+    .hv-ping {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: hv-ping 2.8s ease-out infinite;
+    }
+    .hv-beams path {
+      animation:
+        hv-fade 0.6s ease 1.1s both,
+        hv-flow 1.4s linear infinite;
+    }
+    .hv-orbit {
+      animation: hv-flow 6s linear infinite;
+    }
+    .hv-labels g {
+      animation: hv-fade 0.8s ease 1.2s both;
+    }
+  }
+
+  @keyframes hv-settle {
     from {
       opacity: 0;
-      transform: rotate(-40deg);
+      transform: translateY(-18px);
+    }
+  }
+  @keyframes hv-drift {
+    to {
+      transform: translateY(-5px);
     }
   }
   @keyframes hv-rise {
     from {
-      transform: scaleY(0);
+      transform: scaleY(0.05);
     }
   }
-  @keyframes hv-leaf {
+  @keyframes hv-ping {
+    from {
+      transform: scale(0.6);
+      opacity: 0.8;
+    }
+    to {
+      transform: scale(1.9);
+      opacity: 0;
+    }
+  }
+  @keyframes hv-flow {
+    to {
+      stroke-dashoffset: -20;
+    }
+  }
+  @keyframes hv-fade {
     from {
       opacity: 0;
-      transform: translate(-12px, 10px) scale(0.94);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    :global(.hv-mark .lm-arc),
-    :global(.hv-mark .lm-bar1),
-    :global(.hv-mark .lm-bar2),
-    :global(.hv-mark .lm-bar3),
-    :global(.hv-mark .lm-leaf) {
-      animation: none;
     }
   }
 </style>
