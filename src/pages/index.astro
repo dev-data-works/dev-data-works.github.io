@@ -280,10 +280,12 @@ import { url } from '../config/site';
     height: 100%;
     pointer-events: none;
   }
-  /* On small screens the band would sit behind the body text: leave it out. */
+  /* Small screens: the text spans the width, so the band shrinks to the right third
+     and stays faint. */
   @media (max-width: 59.99em) {
     .hero::before {
-      display: none;
+      width: 33.333%;
+      mask-image: linear-gradient(to right, transparent, rgb(0 0 0 / 0.45) 60%, rgb(0 0 0 / 0.6));
     }
   }
   .hero__grid {
@@ -314,18 +316,11 @@ import { url } from '../config/site';
   .hero .button-row {
     margin-top: 0.25rem;
   }
-  /* Small screens: the mark sits above the heading, aligned with the text. */
-  .hero__visual {
-    order: -1;
-    width: 100%;
-    max-width: 15rem;
-    margin: -1.5rem 0 -1.5rem -0.75rem;
-  }
-  @media (min-width: 60em) {
+  /* Small screens: no illustration; the heading leads. display: none also skips its
+     layout, paint and animations. */
+  @media (max-width: 59.99em) {
     .hero__visual {
-      order: 0;
-      max-width: none;
-      margin: 0;
+      display: none;
     }
   }
 
